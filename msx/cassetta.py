@@ -113,11 +113,11 @@ class Cassetta:
 		temp = ""
 		if len(self.cassetta) > 0:
 			temp += "TAPE CONTENT:\n"
-			temp += "-" * 24 + "\n"
+			temp += "-" * 39 + "\n"
 			for indice, elemento in enumerate(self.cassetta):
-				temp += "{0}) {1}\n".format(str(indice + 1), str(elemento))
-			temp += "-" * 24 + "\n"
-			temp += "COUNT: {0}\n".format(str(len(self.cassetta)))
+				temp += "{0}) {1}\n".format(str(indice + 1).rjust(2), str(elemento))
+			temp += "-" * 39 + "\n"
+			temp += "{0} Files found\n".format(str(len(self.cassetta))).rjust(40)
 			return temp
 		else:
 			raise Eccezione("Tape is empty")

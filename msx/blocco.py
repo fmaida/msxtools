@@ -38,7 +38,7 @@ class BloccoCassetta:
 			if fine_dati < 0:
 				fine_dati = len(p_blocco)
 
-			#print("Intestazione: {0}-{1} - Dati: {1}-{2}".format(str(inizio_intestazione), str(inizio_dati), str(fine_dati)))
+			# print("Intestazione: {0}-{1} - Dati: {1}-{2}".format(str(inizio_intestazione), str(inizio_dati), str(fine_dati)))
 
 			# Cerca il tipo del file
 			tipo_blocco = p_blocco[inizio_intestazione:inizio_intestazione + 10]
@@ -52,9 +52,10 @@ class BloccoCassetta:
 				self.tipo = TipiDiBlocco.BLOCCO_CUSTOM
 
 			# Cerca il titolo del file
-			inizio_titolo = inizio_intestazione + len(tipo_blocco)
-			fine_titolo = inizio_titolo + 6
-			self.titolo = p_blocco[inizio_titolo:fine_titolo].decode("ascii")
+			if self.tipo != TipiDiBlocco.BLOCCO_CUSTOM:
+				inizio_titolo = inizio_intestazione + len(tipo_blocco)
+				fine_titolo = inizio_titolo + 6
+				self.titolo = p_blocco[inizio_titolo:fine_titolo].decode("ascii")
 
 			# Memorizza il blocco dati
 			self.dati = p_blocco[inizio_dati:fine_dati]
@@ -79,5 +80,9 @@ class BloccoCassetta:
 		elif self.tipo == TipiDiBlocco.FILE_BINARIO:
 			tipo = "Binary"
 		else:
-			tipo = "Custom Block"
-		return "\"{0}\" ({1}, {2} Bytes)".format(self.titolo, tipo, len(self.dati))
+			tipo = "Custom"
+		if self.titolo != "":
+			temp = "\"{0}\" ({1})  [ {2} Bytes ] ".format(self.titolo, tipo.ljust(6), str(len(self.dati)).rjust(6))
+		else:
+			temp = "{0} ({1})  [ {2} Bytes ]".format(8 * " ", tipo.ljust(6), str(len(self.dati)).rjust(6))
+		return temp
