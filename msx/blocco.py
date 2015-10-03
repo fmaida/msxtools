@@ -81,6 +81,7 @@ class BloccoCassetta:
 			tipo = "Binary"
 		else:
 			tipo = "Custom"
+
 		if self.titolo != "":
 			temp = "\"{0}\" ({1})  [ {2} Bytes ] ".format(self.titolo, tipo.ljust(6), str(len(self.dati)).rjust(6))
 		else:
