@@ -55,3 +55,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Roba specifica del mio progetto
+# che viene generata a livello di runtime
+*.wav

@@ -15,3 +15,4 @@ except msx.Eccezione as ex:
 
 print()
 print(mia_cassetta)
+mia_cassetta.esporta()

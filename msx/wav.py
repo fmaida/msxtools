@@ -317,17 +317,21 @@ class Wave:
 
 	# ------------------------------------------------------------------------------
 
-	Private Sub InserisciOnda(P_oFile As BinaryStream, P_nFrequenza As Integer) ' Inserisce una forma d'onda sinusoidale nel file WAV
+	def inserisci_onda(p_frequenza: int):
 
-		Dim nInd As Int32
-		Dim nLunghezza As Double = G_nFrequenzaOutput / ( G_nBaudRate * ( P_nFrequenza / 1200 ) )
-		Dim nScala As Double = (2.0 * G_PI) / nLunghezza
+		# Inserisce una forma d'onda sinusoidale nel file WAV
 
-		nInd = 0
-		While(nInd< nLunghezza)
-			P_oFile.WriteByte( 128 - ( Sin( nInd * nScala ) * 127 ) )
-			nInd = nInd + 1
-		Wend
+		frequenza_output = 44100
+		baud_rate = 2400
+
+		ind = 0
+		lunghezza = frequenza_output / ( baud_rate * ( p_frequenza / 1200 ) )
+		scala = (2.0 * math.pi) / lunghezza
+
+		ind = 0
+		while ind < lunghezza:
+			p_file.WriteByte( 128 - ( math.sin( ind * scala ) * 127 ) )
+			ind += 1
 
 	End Sub
 

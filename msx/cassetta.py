@@ -4,6 +4,7 @@ import os
 from .blocco import BloccoCassetta
 from .intestazioni import Intestazioni
 from .eccezioni import Eccezione
+from .wav import Esportazione
 
 
 class Cassetta:
@@ -17,7 +18,12 @@ class Cassetta:
 	# --=-=--------------------------------------------------------------------------=-=--
 
 	def __init__(self):
-		""" Class constructor """
+		"""
+		Costruttore della classe
+
+		Returns:
+			None
+		"""
 
 		# Inizializza i vari array, per partire con una nuova cassetta
 		self.cassetta = []
@@ -54,6 +60,8 @@ class Cassetta:
 		#except:
 		#	raise Eccezione("Unable to find any tape called \"{0}\"".format(p_file))
 
+	# --=-=--------------------------------------------------------------------------=-=--
+
 	def estrai_blocchi(self):
 
 		while len(self.buffer) > 0:
@@ -61,6 +69,8 @@ class Cassetta:
 			fine_blocco = blocco.importa(self.buffer)
 			self.cassetta.append(blocco)
 			self.buffer = self.buffer[fine_blocco:len(self.buffer)]
+
+	# --=-=--------------------------------------------------------------------------=-=--
 
 	def aggiungi(self, p_titolo, p_tipo, p_blocco):
 		"""
@@ -75,6 +85,8 @@ class Cassetta:
 			None
 		"""
 		self.lista_blocchi.append({"titolo": p_titolo, "tipo": p_tipo, "blocco": p_blocco})
+
+	# --=-=--------------------------------------------------------------------------=-=--
 
 	def rimuovi(self, p_indice):
 		"""
@@ -92,6 +104,24 @@ class Cassetta:
 		else:
 			raise Eccezione("The tape element you want to remove is out of bounds")
 
+	# --=-=--------------------------------------------------------------------------=-=--
+
+	def esporta(self, p_nome_file = "output.wav"):
+		"""
+		Test
+
+		Args:
+		    p_nome_file: Percorso e nome del file WAV da creare
+
+		Returns:
+			None
+		"""
+
+		suono = Esportazione(p_nome_file)
+		suono.test()
+
+	# --=-=--------------------------------------------------------------------------=-=--
+
 	def __len__(self):
 		"""
 		Restituisce il numero di blocchi contenuti nella cassetta
@@ -100,6 +130,8 @@ class Cassetta:
 			Un numero intero che indica il numero dei blocchi contenuti nella cassetta
 		"""
 		return len(self.lista_blocchi)
+
+	# --=-=--------------------------------------------------------------------------=-=--
 
 	def __str__(self):
 		"""
