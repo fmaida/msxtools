@@ -4,7 +4,8 @@ from .tipi import TipiDiBlocco
 
 class BloccoCassetta:
 	"""
-	Questa classe gestisce la struttura di un blocco delle cassette MSX
+	Questa classe gestisce la struttura di un blocco delle cassette MSX.
+	Un blocco può contenere un file di tipo ASCII, Binario, Basic o custom.
 	"""
 
 	def __init__(self, p_titolo = "", p_tipo = TipiDiBlocco.BLOCCO_CUSTOM, p_dati = ""):
@@ -14,34 +15,45 @@ class BloccoCassetta:
 		Returns:
 			None
 		"""
-		self.titolo = p_titolo
-		self.tipo = p_tipo
-		self.dati = p_dati
+		self.titolo = p_titolo  # Titolo del file
+		self.tipo = p_tipo  # Tipo del file
+		self.dati = p_dati  # Dati che compongono il file memorizzato
 
-	def importa(self, p_blocco):
+	def importa(self, p_dati_grezzi):
+		"""
+		Importa il primo blocco dati che trova a partire dai dati grezzi
+
+		Args:
+		    p_dati_grezzi: Dati grezzi da cui estrae un blocco da importare
+
+		Returns:
+			Un indice al primo byte successivo alla fine del blocco che ha trovato,
+			in modo da poter richiamare nuovamente la funzione importa per cercare
+			il blocco successivo.
+		"""
 
 		inizio_intestazione = len(Intestazioni.blocco_intestazione)
 
 		# Il blocco inizia con un'intestazione ?
-		if p_blocco[0:inizio_intestazione] == Intestazioni.blocco_intestazione:
+		if Intestazioni.contiene_intestazione(p_dati_grezzi):
 
 			# Si. Vuol dire che al 99% si tratta di un blocco ASCII, Basic o Binario
 
 			# Ceca di individuare l'inizio e la fine della parte dati
-			inizio_dati = p_blocco.find(Intestazioni.blocco_intestazione, inizio_intestazione)
-			fine_dati = p_blocco.find(Intestazioni.blocco_intestazione,
-									  inizio_dati + len(Intestazioni.blocco_intestazione))
+			inizio_dati = p_dati_grezzi.find(Intestazioni.blocco_intestazione, inizio_intestazione)
+			fine_dati = p_dati_grezzi.find(Intestazioni.blocco_intestazione,
+										   inizio_dati + len(Intestazioni.blocco_intestazione))
 
 			# Se non trova la fine dei dati vuol dire che è arrivato alla fine della
 			# cassetta e non ci sono altre intestazioni da trovare. Prende come dimensione
 			# massima la lunghezza complessiva del blocco
 			if fine_dati < 0:
-				fine_dati = len(p_blocco)
+				fine_dati = len(p_dati_grezzi)
 
 			# print("Intestazione: {0}-{1} - Dati: {1}-{2}".format(str(inizio_intestazione), str(inizio_dati), str(fine_dati)))
 
 			# Cerca il tipo del file
-			tipo_blocco = p_blocco[inizio_intestazione:inizio_intestazione + 10]
+			tipo_blocco = p_dati_grezzi[inizio_intestazione:inizio_intestazione + 10]
 			if tipo_blocco == Intestazioni.blocco_file_ascii:
 				self.tipo = TipiDiBlocco.FILE_ASCII
 			elif tipo_blocco == Intestazioni.blocco_file_basic:
@@ -55,15 +67,15 @@ class BloccoCassetta:
 			if self.tipo != TipiDiBlocco.BLOCCO_CUSTOM:
 				inizio_titolo = inizio_intestazione + len(tipo_blocco)
 				fine_titolo = inizio_titolo + 6
-				self.titolo = p_blocco[inizio_titolo:fine_titolo].decode("ascii")
+				self.titolo = p_dati_grezzi[inizio_titolo:fine_titolo].decode("ascii")
 
 			# Memorizza il blocco dati
-			self.dati = p_blocco[inizio_dati:fine_dati]
+			self.dati = p_dati_grezzi[inizio_dati:fine_dati]
 
 		else:
 			# No. Non ha un'intestazione... allora è per forza un blocco custom
 			self.tipo = TipiDiBlocco.BLOCCO_CUSTOM
-			self.dati = p_blocco
+			self.dati = p_dati_grezzi
 
 		return fine_dati
 
@@ -71,7 +83,23 @@ class BloccoCassetta:
 		# TODO
 		pass
 
+	def __len__(self):
+		"""
+		Restituisce la lunghezza di un blocco dati
+
+		Returns:
+			La lunghezza del blocco dati
+		"""
+		return len(self.dati)
+
 	def __str__(self):
+		"""
+		Offre una rappresentazione visuale del blocco dati
+
+		Returns:
+			Una stringa di testo
+		"""
+
 		tipo = ""
 		if self.tipo == TipiDiBlocco.FILE_ASCII:
 			tipo = "ASCII"

@@ -1,7 +1,7 @@
-import wave
-
 from ..intestazioni import Intestazioni
 from .parametri import Parametri
+
+import wave
 
 
 # 1200 x 9 campionamenti (minimo) = 10.800hz
@@ -9,20 +9,57 @@ from .parametri import Parametri
 # 4800 x 9 campionamenti (minimo) = 43.200hz
 
 class Esportazione:
+	def __init__(self, p_file_output="output.wav"):
+		"""
+		Costruttore della classe
 
-	def __init__(self, p_file_output = "output.wav"):
+		Args:
+			p_file_output:	Percorso e nome del file WAV che dovrà creare
+							ed in cui dovrà esportare i file.
+
+		Returns:
+			None
+		"""
+
+		# Prima di cominciare decide la velocità a cui dovranno essere scritti i file
+		# nel file wave. Più è veloce, minore sarà la durata richiesta all'MSX per
+		# caricare un file.
+		Parametri.bitrate = 1200
+
+		# Ora che ha scelto il bitrate gli faccio preparare all'interno di alcuni
+		# array le forme d'onda quadre per rappresentare gli zeri e gli uni da
+		# scrivere all'interno del file wave. Questo perchè se dovessi generarli ogni
+		# volta in tempo reale ci impiegherebbe un sacco di tempo, mentre se invece faccio
+		# così, creo degli array in memoria e poi dico al programma di scrivere il
+		# contenuto degli array su disco ci mette MOLTO MENO!
 		Parametri.ricalcola_onde()
+
+		# Apre il file wav sul disco e si prepara a scriverci dentro
 		self.file_audio = wave.open(p_file_output, "w")
+
+		# Inizializza il file wav con la frequenza richiesta
 		self.file_audio.setparams((1, 1, Parametri.frequenza, 0, 'NONE', 'not compressed'))
 
-	# --=-=--------------------------------------------------------------------------=-=--
+	# --------------------------------------------------------------------------------
 
-	def inserisci_bit(self, p_bit:int):
+	def inserisci_bit(self, p_bit: int):
 		"""
-		Se alla frequenza di 48000hz per ogni secondo devo creare 48.000 campionamenti,
-		per trasmettere 2400 bit al secondo dovrei fare 48000 / 2400 per sapere quanti
-		campionamenti devo usare per trasmettere ogni singolo bit (20)
+		Inserisce un bit (0 o 1) nel file wave, come forma d'onda a 1200 o 2400baud
+		(se la velocità di trasmissione è impostata a 1200baud), oppure come forma
+		d'onda a 2400 o 4800baud (se la velocità di trasmissione è impostata a
+		2400baud)
+
+		Args:
+		    p_bit: Il bit da scrivere nel file wave (0 oppure 1)
+
+		Returns:
+			None
 		"""
+
+		# Anzichè dover scrivere ogni volta la forma d'onda quadra, la creo una volta
+		# per tutte all'interno della classe parametri prima di iniziare, e poi
+		# dico al programma di fare copia e incolla dalla classe al file WAV.
+		# Per ulteriori informazioni vedi le note in parametri.py
 
 		if p_bit == 0:
 			self.file_audio.writeframes(bytes(Parametri.wave_bit_0))
@@ -30,17 +67,27 @@ class Esportazione:
 		elif p_bit == 1:
 			self.file_audio.writeframes(bytes(Parametri.wave_bit_1))
 
-	# --=-=--------------------------------------------------------------------------=-=--
+	# --------------------------------------------------------------------------------
 
 	def inserisci_byte(self, p_byte):
 		"""
 		Prende un byte (che viene passato alla funzione come parametro)
-		e lo scrive nel file WAV sotto forma di forme d'onda. Se è un 1 lo
-		scrive con due onde corte, se è uno 0 lo scrive con un onda lunga
-		(che essendo per l'appunto lunga dura esattamente come due onde corte)
+		e lo scrive nel file WAV sotto forma di forme d'onda.
+		E' importante ricordarsi che per lo standard MSX, per ogni byte da scrivere
+		bisogna farlo anticipare da un bit di start (valore 0) e farlo finire
+		con due bit di stop (valore 1). Se ad esempio sto facendo un file wav alla
+		velocità di 1200baud (parlo di velocità di lettura per l'MSX) dovrà introdurre
+		il byte con un bit di start a 1200baud/bps, e farlo terminare con due bit
+		di stop a 2400baud/bps.
+
+		Args:
+		    p_byte: Il byte da scrivere nel file wav
+
+		Returns:
+			None
 		"""
 
-		# Un bit di start
+		# Inserisce un bit di start
 		self.inserisci_bit(0)
 
 		# Otto bit di dati
@@ -51,33 +98,61 @@ class Esportazione:
 				self.inserisci_bit(1)
 			p_byte >>= 1  # Bitwise.ShiftRight(P_nByte, 1)
 
-		# Due bit di stop
+		# Inserisce due bit di stop
 		self.inserisci_bit(1)
 		self.inserisci_bit(1)
 
-	# --=-=--------------------------------------------------------------------------=-=--
+	# --------------------------------------------------------------------------------
 
-	def inserisci_silenzio(self, p_durata:float):
+	def inserisci_silenzio(self, p_durata: float):
+		"""
+		Inserisce un intervallo di silenzio all'interno del file wav. Spesso
+		serve mettere del silenzio fra un file e l'altro, in modo da dare il
+		tempo all'MSX di processare i dati appena caricati.
 
-		# campionamenti = frequenza / bitrate
+		Args:
+			p_durata: Durata del silenzio espressa in millisecondi
 
-		# devo fare 360° in 20 campionamenti (48000 / 24)
+		Returns:
+			None
+		"""
+
+		# Parametri.bitrate rappresenta il numero di bit che possono essere
+		# trasmessi in un secondo. Il silenzio per come l'ho strutturato io
+		# è un segnale piatto che dura quanto un normale bit. Se ad esempio
+		# voglio creare un silenzio che duri 2 secondi a 1200baud/bps ad
+		# esempio devo inserire nel file wav il silenzio
+		# per 1200 (baud) x 2 (secondi) = 2400 volte.
+		# Ecco da dove nasce il conto del ciclo for.
 
 		for ind in range(int(Parametri.bitrate * (p_durata / 1000))):
 			self.file_audio.writeframes(bytes(Parametri.wave_silenzio))
 
-	# --=-=--------------------------------------------------------------------------=-=--
+	# --------------------------------------------------------------------------------
 
-	def inserisci_sincronismo(self, p_durata:float):
+	def inserisci_sincronismo(self, p_durata: float):
+		"""
+		Inserisce un segnale di sincronismo nel file wav. Sentire il segnale
+		di sincronismo serve all'MSX per capire che sta per arrivare un file.
 
-		# campionamenti = frequenza / bitrate
+		Args:
+			p_durata: Durata del segnale di sincronismo espressa in millisecondi
 
-		# devo fare 360° in 20 campionamenti (48000 / 24)
+		Returns:
+			None
+		"""
+
+		# Parametri.bitrate rappresenta il numero di bit che possono essere
+		# trasmessi in un secondo. Siccome il segnale di sincronismo è composto
+		# da tanti bit di valore 1, per creare un segnale di sincronismo che
+		# dura 2 secondi a 1200baud/bps ad esempio devo inserire nel file wav
+		# il bit 1 per 1200 (baud) x 2 (secondi) = 2400 volte.
+		# Ecco da dove nasce il conto del ciclo for.
 
 		for ind in range(int(Parametri.bitrate * (p_durata / 1000))):
 			self.inserisci_bit(1)
 
-	# --=-=--------------------------------------------------------------------------=-=--
+	# --------------------------------------------------------------------------------
 
 	def test(self):
 		"""
@@ -103,7 +178,7 @@ class Esportazione:
 
 		self.chiudi()
 
-	# --=-=--------------------------------------------------------------------------=-=--
+	# --------------------------------------------------------------------------------
 
 	def chiudi(self):
 		"""
@@ -113,13 +188,11 @@ class Esportazione:
 		self.file_audio.close()
 
 
-
-
 if __name__ == '__main__':
-
 	# Test
 
 	import time
+
 	start_time = time.time()
 
 	suono = Esportazione()
