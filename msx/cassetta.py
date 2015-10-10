@@ -1,7 +1,6 @@
-import os
+from typing import TypeVar
 
-
-from .blocco import BloccoCassetta
+from .blocco import BloccoDati
 from .intestazioni import Intestazioni
 from .eccezioni import Eccezione
 from .wav import Esportazione
@@ -26,8 +25,8 @@ class Cassetta:
 		"""
 
 		# Inizializza i vari array, per partire con una nuova cassetta
-		self.cassetta = []
-		self.buffer = ""
+		self.cassetta = []  # Array che contiene i blocchi di dati che compongono la cassetta
+		self.buffer = ""  # Buffer dati in cui immagazzina temporaneamente il file .cas da analizzare
 		self.indice = -1
 
 	# --=-=--------------------------------------------------------------------------=-=--
@@ -53,9 +52,9 @@ class Cassetta:
 		f.close()
 
 		blocco = self.estrai_blocchi()
-		while not blocco is None:
-			# Memorizza il blocco
-			blocco = self.estrai_prossimo_blocco()
+		# while not blocco is None:
+		#	# Memorizza il blocco
+		# 	blocco = self.estrai_prossimo_blocco()
 
 		#except:
 		#	raise Eccezione("Unable to find any tape called \"{0}\"".format(p_file))
@@ -63,11 +62,26 @@ class Cassetta:
 	# --=-=--------------------------------------------------------------------------=-=--
 
 	def estrai_blocchi(self):
+		"""
+		Tenta di estrarre dal buffer uno o più blocchi dati (Ascii, Basic, Binario o custom)
 
+		Returns:
+			None
+		"""
+
+		# Finchè resta qualcosa nel buffer da analizzare...
 		while len(self.buffer) > 0:
-			blocco = BloccoCassetta()
+			# ..crea un nuovo blocco dati
+			blocco = BloccoDati()
+
+			# Con quello che gli rimane del buffer va alla ricerca del
+			# primo blocco che riesce a trovare
 			fine_blocco = blocco.importa(self.buffer)
+
+			# Aggiunge il blocco che ha trovato alla cassetta
 			self.cassetta.append(blocco)
+
+			# Riduce il buffer togliendo tutto il blocco che ha appena scovato
 			self.buffer = self.buffer[fine_blocco:len(self.buffer)]
 
 	# --=-=--------------------------------------------------------------------------=-=--
@@ -106,7 +120,7 @@ class Cassetta:
 
 	# --=-=--------------------------------------------------------------------------=-=--
 
-	def esporta(self, p_nome_file = "output.wav"):
+	def esporta(self, p_nome_file="output.wav"):
 		"""
 		Test
 
@@ -118,7 +132,10 @@ class Cassetta:
 		"""
 
 		suono = Esportazione(p_nome_file)
-		suono.test()
+		for blocco in self.cassetta:
+			blocco.esporta(suono)
+		# suono.test()
+		suono.chiudi()
 
 	# --=-=--------------------------------------------------------------------------=-=--
 

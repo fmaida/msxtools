@@ -1,8 +1,9 @@
 from .intestazioni import Intestazioni
 from .tipi import TipiDiBlocco
+from .wav import Esportazione
 
 
-class BloccoCassetta:
+class BloccoDati:
 	"""
 	Questa classe gestisce la struttura di un blocco delle cassette MSX.
 	Un blocco può contenere un file di tipo ASCII, Binario, Basic o custom.
@@ -79,7 +80,56 @@ class BloccoCassetta:
 
 		return fine_dati
 
-	def esporta(self):
+	def esporta(self, p_file: Esportazione):
+
+		if self.tipo == TipiDiBlocco.FILE_ASCII:
+			self.esporta_file_ascii(p_file)
+		elif self.tipo == TipiDiBlocco.FILE_BINARIO:
+			self.esporta_file_binario(p_file)
+		elif self.tipo == TipiDiBlocco.FILE_BASIC:
+			self.esporta_file_basic(p_file)
+		else:
+			self.esporta_blocco_custom(p_file)
+
+	def esporta_file_ascii(self, p_file: Esportazione):
+
+		p_file.inserisci_sincronismo(2000)  # Tre secondi
+
+		intestazione = Intestazioni.blocco_file_ascii + self.titolo.ljust(6, " ").encode("ascii")
+
+		for elemento in intestazione:
+			p_file.inserisci_byte(elemento)
+
+		p_file.inserisci_silenzio(750)
+
+		p_file.inserisci_sincronismo(1000)  # Tre/quarti di secondo
+
+		ind = 0
+		continua = True
+		while continua:
+			stringa = self.dati[ind:ind+8]
+			if stringa == Intestazioni.blocco_intestazione:
+				p_file.inserisci_silenzio(500)
+				p_file.inserisci_sincronismo(1000)
+				ind += 8
+			else:
+				a = self.dati[ind:ind+1]
+				if ind < len(self.dati):
+					p_file.inserisci_byte(self.dati[ind:ind+1])
+				else:
+					p_file.inserisci_byte(bytes([26]))
+					continua = False
+				ind += 1
+
+	def esporta_file_binario(self, p_file: Esportazione):
+		# TODO
+		pass
+
+	def esporta_file_basic(self, p_file: Esportazione):
+		# TODO
+		pass
+
+	def esporta_blocco_custom(self, p_file: Esportazione):
 		# TODO
 		pass
 

@@ -50,7 +50,7 @@ class Esportazione:
 		2400baud)
 
 		Args:
-		    p_bit: Il bit da scrivere nel file wave (0 oppure 1)
+			p_bit: Il bit da scrivere nel file wave (0 oppure 1)
 
 		Returns:
 			None
