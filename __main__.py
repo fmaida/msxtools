@@ -20,4 +20,5 @@ if __name__ == '__main__':
 
 	print()
 	print(mia_cassetta)
+
 	mia_cassetta.esporta()
