@@ -8,7 +8,7 @@ class Parametri:
 	"""
 
 	frequenza = 19200  # 19.200hz
-	bitrate = 1200  # 1200bps
+	bitrate = 2400  # 1200bps
 	ampiezza = 0.9  # 90% dell'ampiezza massima
 
 	campionamenti = frequenza / bitrate

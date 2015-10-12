@@ -192,8 +192,10 @@ class Cassetta:
 		"""
 
 		suono = Esportazione(p_nome_file)
-		for blocco in self.cassetta:
+		for ind, blocco in enumerate(self.cassetta):
 			blocco.esporta(suono)
+			if ind < (len(self.cassetta) - 1):
+				suono.inserisci_silenzio(1500)
 		# suono.test()
 		suono.chiudi()
 

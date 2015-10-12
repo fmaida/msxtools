@@ -9,5 +9,8 @@ class FileCustom(BloccoDati):
 
 	def esporta(self, p_file: Esportazione):
 
-		# DA FARE
+
+		p_file.inserisci_sincronismo(2000)  # Tre secondi
+
+		p_file.inserisci_stringa(self.dati)
 		pass

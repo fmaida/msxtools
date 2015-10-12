@@ -24,14 +24,15 @@ class FileAscii(BloccoDati):
 		ind = 0
 		continua = True
 		temp = ""
+		p_file.inserisci_stringa(self.dati)
 		while continua:
 			if ind < (len(self.dati)):
 				a = self.dati[ind:ind+1]
 				b = ord(a)
-				temp += a.decode("ascii")
-				p_file.inserisci_byte(b)
+				temp += a.decode("ascii").replace(chr(26), "[FINE]")
+				#p_file.inserisci_byte(a)
 			else:
-				p_file.inserisci_byte(26)
+				#p_file.inserisci_byte(26)
 				temp += "[FINE]"
 				continua = False
 			ind += 1

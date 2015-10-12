@@ -12,7 +12,7 @@ if __name__ == '__main__':
 	mia_cassetta = msx.Cassetta()
 	try:
 		# mia_cassetta.load(os.getcwd() + "/tapes/introduzione_al_basic.cas")
-		mia_cassetta.load(os.getcwd() + "/tapes/ROADF.CAS")
+		mia_cassetta.load(os.getcwd() + "/tapes/lazy_jones.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/Shamus.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/NV08B.CAS")
 	except msx.Eccezione as ex:
