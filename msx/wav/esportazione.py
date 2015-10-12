@@ -104,6 +104,13 @@ class Esportazione:
 
 	# --------------------------------------------------------------------------------
 
+	def inserisci_stringa(self, p_stringa):
+
+		for elemento in p_stringa:
+			self.inserisci_byte(elemento)
+
+	# --------------------------------------------------------------------------------
+
 	def inserisci_silenzio(self, p_durata: float):
 		"""
 		Inserisce un intervallo di silenzio all'interno del file wav. Spesso

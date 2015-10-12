@@ -13,10 +13,9 @@ class FileAscii(BloccoDati):
 
 		p_file.inserisci_sincronismo(2000)  # Tre secondi
 
-		intestazione = Intestazioni.blocco_file_ascii + self.titolo.ljust(6, " ").encode("ascii")
+		intestazione = self.intestazione + self.titolo.encode("ascii")
 
-		for elemento in intestazione:
-			p_file.inserisci_byte(elemento)
+		p_file.inserisci_stringa(intestazione)
 
 		p_file.inserisci_silenzio(750)
 
