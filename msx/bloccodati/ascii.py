@@ -24,7 +24,6 @@ class FileAscii(BloccoDati):
 		ind = 0
 		continua = True
 		temp = ""
-		print(len(self.dati))
 		while continua:
 			stringa = self.dati[ind:ind+8]
 			if stringa == Intestazioni.blocco_intestazione:
@@ -42,5 +41,5 @@ class FileAscii(BloccoDati):
 					temp += "[FINE]"
 					continua = False
 				ind += 1
-		print(temp)
-		print(len(temp) - len("[FINE]"))
+		print("\"{0}\"\n--------------------------------".format(temp))
+		print("{0} Bytes".format(len(temp) - len("[FINE]")))

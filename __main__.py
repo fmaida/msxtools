@@ -18,7 +18,9 @@ if __name__ == '__main__':
 	except msx.Eccezione as ex:
 		print("Whoops... something went wrong:\n{}".format(ex))
 
+
 	print()
 	print(mia_cassetta)
 
+	print("{0}\n----------------------------------\n{1} Bytes\n\n".format(mia_cassetta.cassetta[0].dati, len(mia_cassetta.cassetta[0])))
 	mia_cassetta.esporta()
