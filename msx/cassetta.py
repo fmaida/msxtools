@@ -139,7 +139,7 @@ class Cassetta:
 			# Si. Vuol dire che al 99% si tratta di un blocco ASCII, Basic o Binario
 
 			# Ceca di individuare l'inizio e la fine della parte dati
-			inizio_dati = p_dati_grezzi.find(Intestazioni.blocco_intestazione, inizio_intestazione)
+			inizio_dati = p_dati_grezzi.find(Intestazioni.blocco_intestazione, inizio_intestazione) + len(Intestazioni.blocco_intestazione)
 			fine_dati = p_dati_grezzi.find(Intestazioni.blocco_intestazione,
 										   inizio_dati + len(Intestazioni.blocco_intestazione))
 

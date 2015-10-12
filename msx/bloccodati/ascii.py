@@ -25,21 +25,16 @@ class FileAscii(BloccoDati):
 		continua = True
 		temp = ""
 		while continua:
-			stringa = self.dati[ind:ind+8]
-			if stringa == Intestazioni.blocco_intestazione:
-				p_file.inserisci_silenzio(500)
-				p_file.inserisci_sincronismo(1000)
-				ind += 8
+			if ind < (len(self.dati)):
+				a = self.dati[ind:ind+1]
+				b = ord(a)
+				temp += a.decode("ascii")
+				p_file.inserisci_byte(b)
 			else:
-				if ind < (len(self.dati) - 1):
-					a = self.dati[ind:ind+1]
-					b = ord(a)
-					temp += a.decode("ascii")
-					p_file.inserisci_byte(b)
-				else:
-					p_file.inserisci_byte(26)
-					temp += "[FINE]"
-					continua = False
-				ind += 1
+				p_file.inserisci_byte(26)
+				temp += "[FINE]"
+				continua = False
+			ind += 1
+
 		print("\"{0}\"\n--------------------------------".format(temp))
 		print("{0} Bytes".format(len(temp) - len("[FINE]")))
