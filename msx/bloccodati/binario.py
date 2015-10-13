@@ -11,7 +11,7 @@ class FileBinario(BloccoDati):
 
 	def esporta(self, p_file: Esportazione):
 
-		p_file.inserisci_sincronismo(2000)  # Tre secondi
+		p_file.inserisci_sincronismo(2500)  # Tre secondi
 
 		intestazione = self.intestazione + self.titolo.encode("ascii")
 

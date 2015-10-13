@@ -11,5 +11,14 @@ class FileBasic(BloccoDati):
 
 	def esporta(self, p_file: Esportazione):
 
-		# DA FARE
-		pass
+		p_file.inserisci_sincronismo(2500)  # Tre secondi
+
+		intestazione = self.intestazione + self.titolo.encode("ascii")
+
+		p_file.inserisci_stringa(intestazione)
+
+		p_file.inserisci_silenzio(750)
+
+		p_file.inserisci_sincronismo(1000)  # Tre/quarti di secondo
+
+		p_file.inserisci_stringa(self.dati)

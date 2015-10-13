@@ -161,12 +161,15 @@ class Cassetta:
 				blocco = FileBinario()
 			else:
 				blocco = FileCustom()
+				inizio_dati = inizio_intestazione
 
 			# Cerca il titolo del file
 			if blocco.__class__.__name__ != "FileCustom":
 				inizio_titolo = inizio_intestazione + len(tipo_blocco)
 				fine_titolo = inizio_titolo + 6
 				blocco.titolo = p_dati_grezzi[inizio_titolo:fine_titolo].decode("ascii")
+			else:
+				blocco._titolo = ""
 
 			# Memorizza il blocco dati
 			blocco.dati = p_dati_grezzi[inizio_dati:fine_dati]

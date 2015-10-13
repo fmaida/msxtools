@@ -151,6 +151,8 @@ class Esportazione:
 		for ind in range(int(Parametri.bitrate * (p_durata / 1000))):
 			self.buffer.extend(Parametri.wave_silenzio)  # self.file_audio.writeframes(bytes(Parametri.wave_silenzio))
 
+		# Se il buffer è abbastanza pieno, li scrive nel file wav
+		# (il che è molto più veloce che scrivere byte per byte sul file wav)
 		if len(self.buffer) >= Esportazione.max_buffer:
 			self.file_audio.writeframes(bytes(self.buffer))
 			self.buffer = []

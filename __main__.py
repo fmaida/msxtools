@@ -9,27 +9,31 @@ if __name__ == '__main__':
 
 	# Test
 
-	import time
+	from cronometro import Cronometro
 
-	start_time = time.time()
+	# --=-=--------------------------------------------------------------------------=-=--
+
+	Cronometro.reset()
 
 	mia_cassetta = msx.Cassetta()
 	try:
+		# mia_cassetta.load(os.getcwd() + "/tapes/lazy_jones.cas")
+	 	# mia_cassetta.load(os.getcwd() + "/tapes/chase_hq_lato_a.cas")
+		mia_cassetta.load(os.getcwd() + "/tapes/boulder_dash.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/introduzione_al_basic.cas")
-		mia_cassetta.load(os.getcwd() + "/tapes/ROADF.CAS")
+		# mia_cassetta.load(os.getcwd() + "/tapes/msx_computer_magazine_06.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/Shamus.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/NV08B.CAS")
 	except msx.Eccezione as ex:
 		print("Whoops... something went wrong:\n{}".format(ex))
 
 
-	print()
+	print(Cronometro.verifica())
+
 	print(mia_cassetta)
 
-	print("{0}\n----------------------------------\n{1} Bytes\n\n".format(mia_cassetta.cassetta[0].dati, len(mia_cassetta.cassetta[0])))
-
-	print("--- {0:.3} seconds ---".format(time.time() - start_time))
+	#print("{0}\n----------------------------------\n{1} Bytes\n\n".format(mia_cassetta.cassetta[0].dati, len(mia_cassetta.cassetta[0])))
 
 	mia_cassetta.esporta()
 
-	print("--- {0:.3} seconds ---".format(time.time() - start_time))
+	print(Cronometro.verifica())
