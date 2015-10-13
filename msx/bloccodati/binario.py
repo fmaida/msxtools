@@ -17,9 +17,9 @@ class FileBinario(BloccoDati):
 
 		p_file.inserisci_stringa(intestazione)
 
-		p_file.inserisci_silenzio(750)
+		p_file.inserisci_silenzio(1000)
 
-		p_file.inserisci_sincronismo(1000)  # Tre/quarti di secondo
+		p_file.inserisci_sincronismo(1500)  # Tre/quarti di secondo
 
 		p_file.inserisci_stringa(self.dati)
 		pass

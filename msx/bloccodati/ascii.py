@@ -17,25 +17,30 @@ class FileAscii(BloccoDati):
 
 		p_file.inserisci_stringa(intestazione)
 
-		p_file.inserisci_silenzio(750)
+		p_file.inserisci_silenzio(1000)
 
-		p_file.inserisci_sincronismo(1000)  # Tre/quarti di secondo
+		p_file.inserisci_sincronismo(1500)  # Tre/quarti di secondo
 
 		ind = 0
+		conto = 0
 		continua = True
 		temp = ""
-		p_file.inserisci_stringa(self.dati)
+		# p_file.inserisci_stringa(self.dati)
 		while continua:
 			if ind < (len(self.dati)):
 				a = self.dati[ind:ind+1]
 				b = ord(a)
-				temp += a.decode("ascii").replace(chr(26), "[FINE]")
-				#p_file.inserisci_byte(a)
+				p_file.inserisci_byte(b)
+				if conto > 255:
+					p_file.inserisci_silenzio(500)
+					p_file.inserisci_sincronismo(1000)
+					conto = 0
 			else:
-				#p_file.inserisci_byte(26)
-				temp += "[FINE]"
+				p_file.inserisci_byte(26)
+				#temp += "[FINE]"
 				continua = False
 			ind += 1
+			conto += 1
 
 		# print("\"{0}\"\n--------------------------------".format(temp))
 		# print("{0} Bytes".format(len(temp) - len("[FINE]")))

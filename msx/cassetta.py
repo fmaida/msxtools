@@ -186,7 +186,7 @@ class Cassetta:
 
 	# --=-=--------------------------------------------------------------------------=-=--
 
-	def esporta(self, p_nome_file="output.wav"):
+	def esporta(self, p_numero_file=-1, p_nome_file="output.wav"):
 		"""
 		Test
 
@@ -198,11 +198,13 @@ class Cassetta:
 		"""
 
 		suono = Esportazione(p_nome_file)
-		for ind, blocco in enumerate(self.cassetta):
-			blocco.esporta(suono)
-			if ind < (len(self.cassetta) - 1):
-				suono.inserisci_silenzio(1500)
-		# suono.test()
+		if p_numero_file < 0:
+			for ind, blocco in enumerate(self.cassetta):
+				blocco.esporta(suono)
+				if ind < (len(self.cassetta) - 1):
+					suono.inserisci_silenzio(4000)
+		else:
+			self.cassetta[p_numero_file].esporta(suono)
 		suono.chiudi()
 
 	# --=-=--------------------------------------------------------------------------=-=--
