@@ -17,8 +17,9 @@ if __name__ == '__main__':
 
 	mia_cassetta = msx.Cassetta()
 	try:
+		mia_cassetta.load(os.getcwd() + "/tapes/guttblaster.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/lazy_jones.cas")
-	 	mia_cassetta.load(os.getcwd() + "/tapes/chase_hq_lato_a.cas")
+	 	# mia_cassetta.load(os.getcwd() + "/tapes/chase_hq_lato_a.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/boulder_dash.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/introduzione_al_basic.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/msx_computer_magazine_06.cas")
