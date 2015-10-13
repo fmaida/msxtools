@@ -9,6 +9,10 @@ import wave
 # 4800 x 9 campionamenti (minimo) = 43.200hz
 
 class Esportazione:
+
+	max_buffer = 512
+
+
 	def __init__(self, p_file_output="output.wav"):
 		"""
 		Costruttore della classe
@@ -40,6 +44,8 @@ class Esportazione:
 		# Inizializza il file wav con la frequenza richiesta
 		self.file_audio.setparams((1, 1, Parametri.frequenza, 0, 'NONE', 'not compressed'))
 
+		self.buffer = []
+
 	# --------------------------------------------------------------------------------
 
 	def inserisci_bit(self, p_bit: int):
@@ -61,11 +67,21 @@ class Esportazione:
 		# dico al programma di fare copia e incolla dalla classe al file WAV.
 		# Per ulteriori informazioni vedi le note in parametri.py
 
+		# Invece di scrivere direttamente sul file WAV (operazione MOLTO LENTA se fatta byte per byte)
+		# si tiene in un array un buffer di valori da scrivere sul file. Quando la lunghezza di questo
+		# array supera una certa dimensione (regolata da Esportazione.max_buffer) li scrive finalmente
+		# sul file e svuota il buffer. Se termina l'esportazione con Esportazione.chiudi() scrive tutti
+		# i dati rimanenti nel buffer sul file.
+
 		if p_bit == 0:
-			self.file_audio.writeframes(bytes(Parametri.wave_bit_0))
+			self.buffer.extend(Parametri.wave_bit_0)  # self.file_audio.writeframes(bytes(Parametri.wave_bit_0))
 
 		elif p_bit == 1:
-			self.file_audio.writeframes(bytes(Parametri.wave_bit_1))
+			self.buffer.extend(Parametri.wave_bit_1)  # self.file_audio.writeframes(bytes(Parametri.wave_bit_1))
+
+		if len(self.buffer) >= Esportazione.max_buffer:
+			self.file_audio.writeframes(bytes(self.buffer))
+			self.buffer = []
 
 	# --------------------------------------------------------------------------------
 
@@ -133,7 +149,11 @@ class Esportazione:
 		# Ecco da dove nasce il conto del ciclo for.
 
 		for ind in range(int(Parametri.bitrate * (p_durata / 1000))):
-			self.file_audio.writeframes(bytes(Parametri.wave_silenzio))
+			self.buffer.extend(Parametri.wave_silenzio)  # self.file_audio.writeframes(bytes(Parametri.wave_silenzio))
+
+		if len(self.buffer) >= Esportazione.max_buffer:
+			self.file_audio.writeframes(bytes(self.buffer))
+			self.buffer = []
 
 	# --------------------------------------------------------------------------------
 
@@ -191,6 +211,10 @@ class Esportazione:
 		"""
 		Chiude il file wave aperto
 		"""
+
+		if len(self.buffer) != 0:
+			self.file_audio.writeframes(bytes(self.buffer))
+			self.buffer = []
 
 		self.file_audio.close()
 
