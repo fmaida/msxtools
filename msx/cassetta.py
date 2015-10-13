@@ -131,23 +131,12 @@ class Cassetta:
 			il blocco successivo.
 		"""
 
-		inizio_intestazione = len(Intestazioni.blocco_intestazione)
-
 		# Il blocco inizia con un'intestazione ?
 		if Intestazioni.contiene_intestazione(p_dati_grezzi):
 
-			# Si. Vuol dire che al 99% si tratta di un blocco ASCII, Basic o Binario
+			# Si. Vuol dire che si tratta di un blocco ASCII, Basic, Binario o custom
 
-			# Ceca di individuare l'inizio e la fine della parte dati
-			inizio_dati = p_dati_grezzi.find(Intestazioni.blocco_intestazione, inizio_intestazione) + len(Intestazioni.blocco_intestazione)
-			fine_dati = p_dati_grezzi.find(Intestazioni.blocco_intestazione,
-										   inizio_dati + len(Intestazioni.blocco_intestazione))
-
-			# Se non trova la fine dei dati vuol dire che è arrivato alla fine della
-			# cassetta e non ci sono altre intestazioni da trovare. Prende come dimensione
-			# massima la lunghezza complessiva del blocco
-			if fine_dati < 0:
-				fine_dati = len(p_dati_grezzi)
+			inizio_intestazione = len(Intestazioni.blocco_intestazione)
 
 			# print("Intestazione: {0}-{1} - Dati: {1}-{2}".format(str(inizio_intestazione), str(inizio_dati), str(fine_dati)))
 
@@ -161,7 +150,6 @@ class Cassetta:
 				blocco = FileBinario()
 			else:
 				blocco = FileCustom()
-				inizio_dati = inizio_intestazione
 
 			# Cerca il titolo del file
 			if blocco.__class__.__name__ != "FileCustom":
@@ -170,6 +158,21 @@ class Cassetta:
 				blocco.titolo = p_dati_grezzi[inizio_titolo:fine_titolo].decode("ascii")
 			else:
 				blocco._titolo = ""
+
+			# Cerca di individuare l'inizio e la fine della parte dati
+			if blocco.__class__.__name__ != "FileCustom":
+				inizio_dati = p_dati_grezzi.find(Intestazioni.blocco_intestazione, inizio_intestazione) + len(Intestazioni.blocco_intestazione)
+			else:
+				inizio_dati = inizio_intestazione
+
+			fine_dati = p_dati_grezzi.find(Intestazioni.blocco_intestazione,
+										   inizio_dati + len(Intestazioni.blocco_intestazione))
+
+			# Se non trova la fine dei dati vuol dire che è arrivato alla fine della
+			# cassetta e non ci sono altre intestazioni da trovare. Prende come dimensione
+			# massima la lunghezza complessiva del blocco
+			if fine_dati < 0:
+				fine_dati = len(p_dati_grezzi)
 
 			# Memorizza il blocco dati
 			blocco.dati = p_dati_grezzi[inizio_dati:fine_dati]
