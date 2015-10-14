@@ -17,16 +17,20 @@ if __name__ == '__main__':
 
 	mia_cassetta = msx.Cassetta()
 	try:
+
 		# mia_cassetta.load(os.getcwd() + "/tapes/berretti_verdi.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/guttblaster.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/lazy_jones.cas")
-		mia_cassetta.load(os.getcwd() + "/tapes/pacmania.cas")
+		#mia_cassetta.load(os.getcwd() + "/tapes/pacmania.cas")
 	 	# mia_cassetta.load(os.getcwd() + "/tapes/chase_hq_lato_a.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/boulder_dash.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/introduzione_al_basic.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/msx_computer_magazine_06.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/Shamus.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/NV08B.CAS")
+		blocco = msx.FileBinario()
+		blocco.importa(os.getcwd() + "/roms/super_cobra.rom")
+		mia_cassetta.cassetta.append(blocco)
 	except msx.Eccezione as ex:
 		print("Whoops... something went wrong:\n{}".format(ex))
 
