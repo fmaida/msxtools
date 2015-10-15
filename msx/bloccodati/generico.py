@@ -33,7 +33,7 @@ class BloccoDati:
 	@titolo.setter
 	def titolo(self, titolo):
 		if len(titolo) > 6:
-			titolo = titolo[0:5]
+			titolo = titolo[0:6]
 		self._titolo = titolo.ljust(6, " ")
 
 	# --=-=--------------------------------------------------------------------------=-=--

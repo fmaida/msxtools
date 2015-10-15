@@ -1,0 +1,41 @@
+Como usar os Init Games
+
+Existem 4 Init Games diferentes:
+
+INIT16K1.ASM - Para iniciar programas em cartuchos de 16 Kbytes localizados
+               na pagina 1 (4000H - 7FFFH).
+
+INIT16K2.ASM - Para iniciar programas em cartuchos de 16 Kbytes localizados
+               na pagina 2 (8000H - BFFFH).
+
+INIT32K1.ASM - Para iniciar a primeira parte de programas em cartuchos de
+               32 Kbytes (localizada na pagina 1 (4000H - 7FFFH). E' a unica
+               rotina que devolve o controle ao interpretador.
+
+INIT32K2.ASM - Para iniciar a segunda parte de programas em cartuchos de
+               32 Kbytes (localizada na pagina 2 (8000H - BFFFH). Essa rotina
+               executa o jogo apos o carregamento.
+
+     Todos os blocos devem ser de 16 Kbytes e carregados de disco entre os
+enderecos 9000H-CFFFH. Os Init Games comecam sempre em D000H. Para aplicar
+os Init Games, e' simples: apos carregar um bloco na memoria no endereco
+certo (9000H-CFFFH), basta carregar o Init Game adequado e depois salvar
+novamente no disco nos enderecos 9000H-D038H.
+
+BSAVE GAME.BIN,&H9000,&HD038,&HD000
+
+     Note que o Init Game ira' sobrescrever qualquer rotina a partir de
+D000H. O jogo pode ser executado por um programa BASIC sem qualquer
+parametro adicional. Assim, um jogo de 32K pode ser executado pelo seguinte
+programinha BASIC:
+
+10 BLOAD "PARTE1.BIN",R
+20 BLOAD "PARTE2.BIN",R
+
+     E' so'. Qualquer duvida sobre o uso dos Init Games poderao ser tiradas
+me passando um e-mail.
+
+Edison Antonio Pires de Moraes
+eapmoraes@ig.com.br
+www.msxtop2.cjb.net
+

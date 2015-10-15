@@ -15,22 +15,32 @@ if __name__ == '__main__':
 
 	Cronometro.reset()
 
+	# Legge il file dal disco
+	f = open(os.getcwd() + "/initgame/INIT32K2.asm", "rb")
+	buffer = f.read()
+	f.close()
+	print(buffer)
+	quit()
+
 	mia_cassetta = msx.Cassetta()
 	try:
-
+		# mia_cassetta.load(os.getcwd() + "/tapes/ROADF.CAS")
 		# mia_cassetta.load(os.getcwd() + "/tapes/berretti_verdi.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/guttblaster.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/lazy_jones.cas")
-		#mia_cassetta.load(os.getcwd() + "/tapes/pacmania.cas")
+		# mia_cassetta.load(os.getcwd() + "/tapes/pacmania.cas")
 	 	# mia_cassetta.load(os.getcwd() + "/tapes/chase_hq_lato_a.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/boulder_dash.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/introduzione_al_basic.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/msx_computer_magazine_06.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/Shamus.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/NV08B.CAS")
+
 		blocco = msx.FileBinario()
-		blocco.importa(os.getcwd() + "/roms/super_cobra.rom")
+		# blocco.importa(os.getcwd() + "/roms/super_cobra.rom")
+		blocco.importa(os.getcwd() + "/roms/antarctic_adventure.rom")
 		mia_cassetta.cassetta.append(blocco)
+
 	except msx.Eccezione as ex:
 		print("Whoops... something went wrong:\n{}".format(ex))
 
@@ -41,6 +51,7 @@ if __name__ == '__main__':
 
 	#print("{0}\n----------------------------------\n{1} Bytes\n\n".format(mia_cassetta.cassetta[0].dati, len(mia_cassetta.cassetta[0])))
 
+	#print(mia_cassetta.cassetta[1].dati) # 0x9000,0xd1a3, 0xd000
 	mia_cassetta.esporta()
 
 	print(Cronometro.verifica())

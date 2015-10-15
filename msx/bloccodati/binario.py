@@ -12,7 +12,44 @@ class FileBinario(BloccoDati):
 
 	# --=-=--------------------------------------------------------------------------=-=--
 
+	def __indirizzo(self, p_valore: int):
+		valore_a = int(str(p_valore)[2:4], 16)
+		valore_b = int(str(p_valore)[4:7], 16)
+		return bytes([valore_b, valore_a])
+
 	def importa(self, p_file):
+
+		# Legge il file .ROM dal disco
+		f = open(p_file, "rb")
+		buffer = f.read()
+		f.close()
+
+		# Legge l'indirizzo di esecuzione
+		a = int(buffer[2])
+		b = int(buffer[3])
+		c = 256 * b + a
+		d = len(Loader.test1)
+
+		indirizzo_iniziale = hex(0x9000)  # 0xA000  # int("A000", 16)
+		indirizzo_finale = hex(0x9000 + len(buffer) + len(Loader.test1) - 1)  # 0xD038H
+		indirizzo_esecuzione = hex(0x9000 + len(buffer))
+
+		d = self.__indirizzo(indirizzo_esecuzione)
+
+		temp = b""
+
+		temp += self.__indirizzo(indirizzo_iniziale)
+		temp += self.__indirizzo(indirizzo_finale)
+		temp += self.__indirizzo(indirizzo_esecuzione)
+
+		temp += buffer + Loader.test1
+
+		self.titolo = os.path.splitext(os.path.basename(p_file))[0]
+		self.dati = temp
+		print(temp)
+		#exit()
+
+	def importa2(self, p_file):
 
 		# Legge il file .CAS dal disco
 		f = open(p_file, "rb")
@@ -21,8 +58,8 @@ class FileBinario(BloccoDati):
 
 		self.titolo = os.path.splitext(os.path.basename(p_file))[0]
 
-		indirizzo_iniziale = int("A000", 16)
-		indirizzo_esecuzione = indirizzo_iniziale + len(buffer) # C000
+		indirizzo_iniziale = 0x9000  # 0xA000  # int("A000", 16)
+		indirizzo_esecuzione = indirizzo_iniziale + len(buffer)  # C000
 
 		temp = Intestazioni.blocco_intestazione + FileBinario.intestazione + \
 			   self.titolo.encode("ascii") + Intestazioni.blocco_intestazione
@@ -33,25 +70,47 @@ class FileBinario(BloccoDati):
 		temp2 = hex(indirizzo)
 		temp2 = temp2[2:]
 		temp2 = temp2.rjust(4, "0") # PadL(cTemp2, 4, "0")
-		valore1 = int(temp2[3:5], 16)  # Val("&h" + Mid(cTemp2, 3, 2))
+		a = temp2[2:4]
+		b = temp2[0:2]
+		valore1 = int(temp2[2:4], 16)  # Val("&h" + Mid(cTemp2, 3, 2))
 		valore2 = int(temp2[0:2], 16)  # Val("&h" + Mid(cTemp2, 1, 2))
 
 		temp += bytes([valore1, valore2])
+		gigetto = bytes([valore1, valore2])
 
 		# Indirizzo finale (Indirizzo di partenza + Lunghezza file - 1)
 
-		indirizzo += len(buffer) + len(Loader.binari_8k_4000h) - 1
+		c = len(Loader.test1)
+		l = len(buffer)
+		indirizzo += len(buffer) + len(Loader.test1) - 1
+		m = hex(indirizzo)  # Dovrebbe essere 0xD038
 		temp2 = hex(indirizzo)
 		temp2 = temp2[2:]
 		temp2 = temp2.rjust(4, "0") # PadL(cTemp2, 4, "0")
-		valore1 = int(temp2[3:5], 16)  # Val("&h" + Mid(cTemp2, 3, 2))
+		a = temp2[2:4]
+		b = temp2[0:2]
+		valore1 = int(temp2[2:4], 16)  # Val("&h" + Mid(cTemp2, 3, 2))
+		valore2 = int(temp2[0:2], 16)  # Val("&h" + Mid(cTemp2, 1, 2))
+
+		temp += bytes([valore1, valore2])
+		gigetto = bytes([valore1, valore2])
+
+		# Indirizzo di esecuzione del file
+
+		indirizzo = indirizzo_esecuzione
+		temp2 = hex(indirizzo)
+		temp2 = temp2[2:]
+		temp2 = temp2.rjust(4, "0") # PadL(cTemp2, 4, "0")
+		a = temp2[2:4]
+		b = temp2[0:2]
+		valore1 = int(temp2[2:4], 16)  # Val("&h" + Mid(cTemp2, 3, 2))
 		valore2 = int(temp2[0:2], 16)  # Val("&h" + Mid(cTemp2, 1, 2))
 
 		temp += bytes([valore1, valore2])
 
 		# Ora può aggiungere la ROM vera e propria (o una sua porzione) al file
 
-		temp += buffer + Loader.binari_8k_4000h
+		temp += buffer + Loader.test1
 
 		self.dati = temp
 
