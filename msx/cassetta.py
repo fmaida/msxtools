@@ -1,7 +1,8 @@
-from typing import TypeVar
+import os
 
 from .bloccodati import FileAscii, FileBasic, FileBinario, FileCustom
 from .intestazioni import Intestazioni
+from .loader import Loader
 from .eccezioni import Eccezione
 from .wav import Esportazione
 
@@ -84,7 +85,7 @@ class Cassetta:
 
 	# --=-=--------------------------------------------------------------------------=-=--
 
-	def aggiungi(self, p_titolo, p_tipo, p_blocco):
+	def aggiungi(self, p_blocco):
 		"""
 		Aggiunge un nuovo blocco-dati alla cassetta
 
@@ -96,7 +97,7 @@ class Cassetta:
 		Returns:
 			None
 		"""
-		self.lista_blocchi.append({"titolo": p_titolo, "tipo": p_tipo, "blocco": p_blocco})
+		self.cassetta.append(p_blocco)
 
 	# --=-=--------------------------------------------------------------------------=-=--
 
@@ -111,8 +112,8 @@ class Cassetta:
 			None se risce ad eliminare il blocco, altrimenti solleva un'eccezione
 		"""
 
-		if p_indice < len(self.lista_blocchi):
-			self.lista_blocchi.remove(p_indice)
+		if p_indice < len(self.cassetta):
+			self.cassetta.remove(p_indice)
 		else:
 			raise Eccezione("The tape element you want to remove is out of bounds")
 
@@ -183,6 +184,43 @@ class Cassetta:
 			blocco.dati = p_dati_grezzi
 
 		return fine_dati, blocco
+
+	# --=-=--------------------------------------------------------------------------=-=--
+
+	def importa_rom(self, p_nome_file):
+
+		# Legge il file .ROM dal disco
+		f = open(p_nome_file, "rb")
+		buffer = f.read()
+		f.close()
+
+		ind = 0
+		ind2 = 0
+		while ind < len(buffer):
+
+			blocco = FileBinario()
+
+			blocco.titolo = os.path.splitext(os.path.basename(p_nome_file))[0]
+
+			if ind2 == 0:
+				blocco.importa(buffer[ind:ind + 16384], Loader.binari_32k_4000h)
+			else:
+				blocco.importa(buffer[ind:ind + 16384], Loader.binari_32k_8000h)
+
+			self.aggiungi(blocco)
+
+			ind += 16384
+			ind2 += 1
+
+	# --=-=--------------------------------------------------------------------------=-=--
+
+	def importa_ascii(self, p_titolo, p_dati):
+
+		blocco = FileAscii()
+		blocco.titolo = p_titolo
+		blocco.dati = p_dati
+
+		self.aggiungi(blocco)
 
 	# --=-=--------------------------------------------------------------------------=-=--
 

@@ -1,7 +1,4 @@
-import os
-
 from .generico import BloccoDati
-from ..loader import Loader
 from ..intestazioni import Intestazioni
 from ..wav import Esportazione
 
@@ -17,37 +14,22 @@ class FileBinario(BloccoDati):
 		valore_b = int(str(p_valore)[4:7], 16)
 		return bytes([valore_b, valore_a])
 
-	def importa(self, p_file):
-
-		# Legge il file .ROM dal disco
-		f = open(p_file, "rb")
-		buffer = f.read()
-		f.close()
+	def importa(self, p_buffer, p_loader):
 
 		# Legge l'indirizzo di esecuzione
-		a = int(buffer[2])
-		b = int(buffer[3])
-		c = 256 * b + a
-		d = len(Loader.test1)
 
 		indirizzo_iniziale = hex(0x9000)  # 0xA000  # int("A000", 16)
-		indirizzo_finale = hex(0x9000 + len(buffer) + len(Loader.test1) - 1)  # 0xD038H
-		indirizzo_esecuzione = hex(0x9000 + len(buffer))
-
-		d = self.__indirizzo(indirizzo_esecuzione)
+		indirizzo_finale = hex(0x9000 + len(p_buffer) + len(p_loader) - 1)  # 0xD038H
+		indirizzo_esecuzione = hex(0x9000 + len(p_buffer))
 
 		temp = b""
-
 		temp += self.__indirizzo(indirizzo_iniziale)
 		temp += self.__indirizzo(indirizzo_finale)
 		temp += self.__indirizzo(indirizzo_esecuzione)
 
-		temp += buffer + Loader.test1
+		temp += p_buffer + p_loader
 
-		self.titolo = os.path.splitext(os.path.basename(p_file))[0]
 		self.dati = temp
-		print(temp)
-		#exit()
 
 	def importa2(self, p_file):
 

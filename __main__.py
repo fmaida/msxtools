@@ -16,11 +16,11 @@ if __name__ == '__main__':
 	Cronometro.reset()
 
 	# Legge il file dal disco
-	f = open(os.getcwd() + "/initgame/INIT32K2.asm", "rb")
-	buffer = f.read()
-	f.close()
-	print(buffer)
-	quit()
+	# f = open(os.getcwd() + "/initgame/INIT32K2.asm", "rb")
+	# buffer = f.read()
+	# f.close()
+	# print(buffer)
+	# quit()
 
 	mia_cassetta = msx.Cassetta()
 	try:
@@ -36,10 +36,10 @@ if __name__ == '__main__':
 		# mia_cassetta.load(os.getcwd() + "/tapes/Shamus.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/NV08B.CAS")
 
-		blocco = msx.FileBinario()
 		# blocco.importa(os.getcwd() + "/roms/super_cobra.rom")
-		blocco.importa(os.getcwd() + "/roms/antarctic_adventure.rom")
-		mia_cassetta.cassetta.append(blocco)
+		programma = "10 SCREEN 2 : CLS : KEY OFF\r\n20 PRINT \"GAME IS LOADING - www.ka7.eu\"\r\n30 BLOAD\"CAS:\",R\r\n40 BLOAD\"CAS:\",R\r\n"
+		mia_cassetta.importa_ascii("LOADER", programma)
+		mia_cassetta.importa_rom(os.getcwd() + "/roms/knightmare.rom")
 
 	except msx.Eccezione as ex:
 		print("Whoops... something went wrong:\n{}".format(ex))
