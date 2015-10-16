@@ -194,6 +194,9 @@ class Cassetta:
 		buffer = f.read()
 		f.close()
 
+		a = len(Loader.binari_32k_4000h)
+		b = len(Loader.binari_32k_8000h)
+
 		ind = 0
 		ind2 = 0
 		while ind < len(buffer):
@@ -202,6 +205,11 @@ class Cassetta:
 
 			blocco.titolo = os.path.splitext(os.path.basename(p_nome_file))[0]
 
+			a = buffer[ind:ind + 16384]
+			b = len(a)
+			c = int(a[2])
+			d = int(a[3])
+			e = hex(c) + hex(d)
 			if ind2 == 0:
 				blocco.importa(buffer[ind:ind + 16384], Loader.binari_32k_4000h)
 			else:
