@@ -12,7 +12,8 @@ if __name__ == '__main__':
 	from cronometro import Cronometro
 
 	# --=-=--------------------------------------------------------------------------=-=--
-
+	a = msx.Cassetta()
+	a.importa()
 	Cronometro.reset()
 
 	# Legge il file dal disco
