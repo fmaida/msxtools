@@ -12,16 +12,19 @@ if __name__ == '__main__':
 	from cronometro import Cronometro
 
 	# --=-=--------------------------------------------------------------------------=-=--
-	a = msx.Cassetta()
-	a.importa()
+
 	Cronometro.reset()
 
+	"""
 	# Legge il file dal disco
-	#f = open(os.getcwd() + "/initgame/l32k2.bin", "rb")
-	#buffer = f.read()
-	#f.close()
-	#print(buffer[7:])
-	#quit()
+	f = open(os.getcwd() + "/initgame/singload.bin", "rb")
+	buffer = f.read()
+	f.close()
+	print(buffer)
+	print()
+	print(buffer[7:])
+	quit()
+	"""
 
 	mia_cassetta = msx.Cassetta()
 	try:
@@ -40,7 +43,7 @@ if __name__ == '__main__':
 		# blocco.importa(os.getcwd() + "/roms/super_cobra.rom")
 		#programma = "10 SCREEN 2 : CLS : KEY OFF\r\n20 PRINT \"GAME IS LOADING - www.ka7.eu\"\r\n30 BLOAD\"CAS:\",R\r\n40 BLOAD\"CAS:\",R\r\n"
 		#mia_cassetta.importa_ascii("LOADER", programma)
-		mia_cassetta.importa_rom(os.getcwd() + "/roms/superboy.rom")
+		mia_cassetta.importa_rom(os.getcwd() + "/roms/antarctic_adventure.rom")
 
 	except msx.Eccezione as ex:
 		print("Whoops... something went wrong:\n{}".format(ex))

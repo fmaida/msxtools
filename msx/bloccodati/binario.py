@@ -23,11 +23,31 @@ class FileBinario(BloccoDati):
 		indirizzo_esecuzione = hex(0x9000 + len(p_buffer))
 
 		temp = b""
+
+		"""
 		temp += self.__indirizzo(indirizzo_iniziale)
 		temp += self.__indirizzo(indirizzo_finale)
 		temp += self.__indirizzo(indirizzo_esecuzione)
+		"""
 
-		temp += p_buffer + p_loader
+		"""
+		0..1) C348
+		2..3) 9000
+		4..5) 0000
+		6..7) 0000
+		8..9) 0000
+		"""
+
+		a = p_loader
+		print(bytes([int("40", 16)]))
+		a[4] = bytes([int("40", 16)])
+		a[5] = bytes([int("00", 16)])
+		a[6] = bytes([int("7F", 16)])
+		a[7] = bytes([int("FF", 16)])
+		a[8] = bytes([int("40", 16)])
+		a[9] = bytes([int("10", 16)])
+
+		temp += a + p_buffer
 
 		self.dati = temp
 

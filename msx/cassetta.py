@@ -194,6 +194,24 @@ class Cassetta:
 		buffer = f.read()
 		f.close()
 
+		"""
+		0..1) C348
+		2..3) 9000
+		4..5) 0000
+		6..7) 0000
+		8..9) 0000
+		"""
+
+		blocco = FileBinario()
+		blocco.titolo = os.path.splitext(os.path.basename(p_nome_file))[0]
+
+		a = Loader.binari_16k_4000h
+
+		blocco.importa(buffer, a)
+
+		self.aggiungi(blocco)
+
+		"""
 		a = len(Loader.binari_32k_4000h)
 		b = len(Loader.binari_32k_8000h)
 
@@ -219,6 +237,7 @@ class Cassetta:
 
 			ind += 16384
 			ind2 += 1
+		"""
 
 	# --=-=--------------------------------------------------------------------------=-=--
 

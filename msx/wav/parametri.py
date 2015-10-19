@@ -7,8 +7,8 @@ class Parametri:
 	memoria al disco è MOLTO PIU' VELOCE che creare ogni volta la forma d'onda in tempo reale!
 	"""
 
-	frequenza = 19200  # 19.200hz
-	bitrate = 2400  # 1200bps
+	frequenza = 28800  # 19.200hz
+	bitrate = 3600  # 1200bps
 	ampiezza = 0.98  # 98% dell'ampiezza massima
 
 	campionamenti = frequenza / bitrate
