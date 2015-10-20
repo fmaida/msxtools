@@ -19,8 +19,8 @@ class FileBinario(BloccoDati):
 		# Legge l'indirizzo di esecuzione
 
 		indirizzo_iniziale = hex(0x9000)  # 0xA000  # int("A000", 16)
-		indirizzo_finale = hex(0x9000 + len(p_buffer) + len(p_loader) - 1)  # 0xD038H
-		indirizzo_esecuzione = hex(0x9000 + len(p_buffer))
+		indirizzo_finale = hex(0x9000 + len(p_buffer) + len(p_loader) - 1)  # 0xD038
+		indirizzo_esecuzione = hex(0x9000 + len(p_buffer))  # 0xD000
 
 		temp = b""
 
@@ -39,15 +39,24 @@ class FileBinario(BloccoDati):
 		"""
 
 		a = p_loader
-		print(bytes([int("40", 16)]))
-		a[4] = bytes([int("40", 16)])
-		a[5] = bytes([int("00", 16)])
-		a[6] = bytes([int("7F", 16)])
-		a[7] = bytes([int("FF", 16)])
-		a[8] = bytes([int("40", 16)])
-		a[9] = bytes([int("10", 16)])
 
-		temp += a + p_buffer
+		a += bytes([int("C3", 16)])
+		a += bytes([int("48", 16)])
+		a += bytes([int("90", 16)])
+		a += bytes([int("00", 16)])
+		a += bytes([int("7F", 16)])
+		a += bytes([int("FF", 16)])
+		a += bytes([int("40", 16)])
+		a += bytes([int("10", 16)])
+
+		temp += Intestazioni.blocco_intestazione + FileBinario.intestazione + \
+			self.titolo.encode("ascii") + Intestazioni.blocco_intestazione
+
+		temp += self.__indirizzo(indirizzo_iniziale)
+		temp += self.__indirizzo(indirizzo_finale)
+		temp += self.__indirizzo(indirizzo_esecuzione)
+
+		temp += p_loader[10:] + p_buffer
 
 		self.dati = temp
 
@@ -58,13 +67,14 @@ class FileBinario(BloccoDati):
 		buffer = f.read()
 		f.close()
 
+		# Cambia il titolo prendendolo dal nome del file
 		self.titolo = os.path.splitext(os.path.basename(p_file))[0]
 
 		indirizzo_iniziale = 0x9000  # 0xA000  # int("A000", 16)
 		indirizzo_esecuzione = indirizzo_iniziale + len(buffer)  # C000
 
 		temp = Intestazioni.blocco_intestazione + FileBinario.intestazione + \
-			   self.titolo.encode("ascii") + Intestazioni.blocco_intestazione
+			self.titolo.encode("ascii") + Intestazioni.blocco_intestazione
 
 		# Indirizzo di partenza
 
@@ -78,24 +88,17 @@ class FileBinario(BloccoDati):
 		valore2 = int(temp2[0:2], 16)  # Val("&h" + Mid(cTemp2, 1, 2))
 
 		temp += bytes([valore1, valore2])
-		gigetto = bytes([valore1, valore2])
 
 		# Indirizzo finale (Indirizzo di partenza + Lunghezza file - 1)
 
-		c = len(Loader.test1)
-		l = len(buffer)
 		indirizzo += len(buffer) + len(Loader.test1) - 1
-		m = hex(indirizzo)  # Dovrebbe essere 0xD038
 		temp2 = hex(indirizzo)
 		temp2 = temp2[2:]
 		temp2 = temp2.rjust(4, "0") # PadL(cTemp2, 4, "0")
-		a = temp2[2:4]
-		b = temp2[0:2]
 		valore1 = int(temp2[2:4], 16)  # Val("&h" + Mid(cTemp2, 3, 2))
 		valore2 = int(temp2[0:2], 16)  # Val("&h" + Mid(cTemp2, 1, 2))
 
 		temp += bytes([valore1, valore2])
-		gigetto = bytes([valore1, valore2])
 
 		# Indirizzo di esecuzione del file
 
@@ -103,8 +106,6 @@ class FileBinario(BloccoDati):
 		temp2 = hex(indirizzo)
 		temp2 = temp2[2:]
 		temp2 = temp2.rjust(4, "0") # PadL(cTemp2, 4, "0")
-		a = temp2[2:4]
-		b = temp2[0:2]
 		valore1 = int(temp2[2:4], 16)  # Val("&h" + Mid(cTemp2, 3, 2))
 		valore2 = int(temp2[0:2], 16)  # Val("&h" + Mid(cTemp2, 1, 2))
 
