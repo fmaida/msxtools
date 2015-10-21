@@ -1,3 +1,5 @@
+import os
+
 from .generico import BloccoDati
 from ..intestazioni import Intestazioni
 from ..wav import Esportazione
@@ -14,13 +16,33 @@ class FileBinario(BloccoDati):
 		valore_b = int(str(p_valore)[4:7], 16)
 		return bytes([valore_b, valore_a])
 
+	# --=-=--------------------------------------------------------------------------=-=--
+
+	def __typecasting(crc):
+		msb = hex(crc >> 8)
+		lsb = hex(crc & 0x00FF)
+		return lsb + msb
+
+	def __crc16(data, bits=8):
+		crc = 0xFFFF
+		for op, code in zip(data[0::2], data[1::2]):
+			crc = crc ^ int(op + code, 16)
+			for bit in range(0, bits):
+				if (crc & 0x0001) == 0x0001:
+					crc = ((crc >> 1) ^ 0xA001)
+				else:
+					crc = crc >> 1
+		return self.__typecasting(crc)
+
+	# --=-=--------------------------------------------------------------------------=-=--
+
 	def importa(self, p_buffer, p_loader):
 
 		# Legge l'indirizzo di esecuzione
 
 		indirizzo_iniziale = hex(0x9000)  # 0xA000  # int("A000", 16)
 		indirizzo_finale = hex(0x9000 + len(p_buffer) + len(p_loader) - 1)  # 0xD038
-		indirizzo_esecuzione = hex(0x9000 + len(p_buffer))  # 0xD000
+		indirizzo_esecuzione = hex(0x9000)  # + len(p_buffer))  # 0xD000
 
 		temp = b""
 
@@ -49,12 +71,20 @@ class FileBinario(BloccoDati):
 		a += bytes([int("40", 16)])
 		a += bytes([int("10", 16)])
 
-		temp += Intestazioni.blocco_intestazione + FileBinario.intestazione + \
-			self.titolo.encode("ascii") + Intestazioni.blocco_intestazione
+		#temp += Intestazioni.blocco_intestazione + FileBinario.intestazione + \
+		#	self.titolo.encode("ascii") + Intestazioni.blocco_intestazione
 
 		temp += self.__indirizzo(indirizzo_iniziale)
 		temp += self.__indirizzo(indirizzo_finale)
 		temp += self.__indirizzo(indirizzo_esecuzione)
+
+		temp += bytes([int("C3", 16), int("30", 16)])
+		temp += self.__indirizzo(indirizzo_iniziale)
+		temp += self.__indirizzo(indirizzo_finale)
+		temp += self.__indirizzo(indirizzo_esecuzione)
+
+		a = self.__crc16(p_buffer)
+		temp += self.__crc16(p_buffer)
 
 		temp += p_loader[10:] + p_buffer
 
@@ -117,10 +147,24 @@ class FileBinario(BloccoDati):
 
 		self.dati = temp
 
+	# --=-=--------------------------------------------------------------------------=-=--
+
+	def esporta_file(self, p_percorso):
+
+		file_esportato = os.path.join(p_percorso, self.titolo.strip() + ".bin")
+
+		# Apre il file sul disco
+		f = open(file_esportato, "wb")
+
+		f.write(bytes([int("FE", 16)]))
+
+		f.write(self.dati)
+
+		f.close()
 
 	# --=-=--------------------------------------------------------------------------=-=--
 
-	def esporta(self, p_file: Esportazione):
+	def esporta_wav(self, p_file: Esportazione):
 
 		p_file.inserisci_sincronismo(2500)  # Tre secondi
 

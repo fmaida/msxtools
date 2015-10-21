@@ -53,9 +53,12 @@ if __name__ == '__main__':
 
 	print(mia_cassetta)
 
-	#print("{0}\n----------------------------------\n{1} Bytes\n\n".format(mia_cassetta.cassetta[0].dati, len(mia_cassetta.cassetta[0])))
+	# print("{0}\n----------------------------------\n{1} Bytes\n\n".format(mia_cassetta.cassetta[0].dati, len(mia_cassetta.cassetta[0])))
 
-	#print(mia_cassetta.cassetta[1].dati) # 0x9000,0xd1a3, 0xd000
-	mia_cassetta.esporta()
+	# print(mia_cassetta.cassetta[1].dati) # 0x9000,0xd1a3, 0xd000
+
+	mia_cassetta.cassetta[0].esporta_file(os.path.join(os.getcwd(), "export"))
+
+	# mia_cassetta.esporta_wav()
 
 	print(Cronometro.verifica())
