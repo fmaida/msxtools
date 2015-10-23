@@ -11,28 +11,13 @@ class FileBinario(BloccoDati):
 
 	# --=-=--------------------------------------------------------------------------=-=--
 
-	def __indirizzo(self, p_valore: int):
+	def __indirizzo(self, p_valore: int, p_inverti=True):
 		valore_a = int(str(p_valore)[2:4], 16)
 		valore_b = int(str(p_valore)[4:7], 16)
-		return bytes([valore_b, valore_a])
-
-	# --=-=--------------------------------------------------------------------------=-=--
-
-	def __typecasting(crc):
-		msb = hex(crc >> 8)
-		lsb = hex(crc & 0x00FF)
-		return lsb + msb
-
-	def __crc16(data, bits=8):
-		crc = 0xFFFF
-		for op, code in zip(data[0::2], data[1::2]):
-			crc = crc ^ int(op + code, 16)
-			for bit in range(0, bits):
-				if (crc & 0x0001) == 0x0001:
-					crc = ((crc >> 1) ^ 0xA001)
-				else:
-					crc = crc >> 1
-		return self.__typecasting(crc)
+		if p_inverti:
+			return bytes([valore_b, valore_a])
+		else:
+			return bytes([valore_a, valore_b])
 
 	# --=-=--------------------------------------------------------------------------=-=--
 
@@ -74,19 +59,23 @@ class FileBinario(BloccoDati):
 		#temp += Intestazioni.blocco_intestazione + FileBinario.intestazione + \
 		#	self.titolo.encode("ascii") + Intestazioni.blocco_intestazione
 
+		#temp += self.__indirizzo(indirizzo_iniziale)
+		#temp += self.__indirizzo(indirizzo_finale)
+		#temp += self.__indirizzo(indirizzo_esecuzione)
+
+		temp += bytes([0xC3, 0x30])  # bytes([int("C3", 16), int("30", 16)])
 		temp += self.__indirizzo(indirizzo_iniziale)
 		temp += self.__indirizzo(indirizzo_finale)
-		temp += self.__indirizzo(indirizzo_esecuzione)
+		temp += self.__indirizzo(0x9000 + len(p_loader))
 
-		temp += bytes([int("C3", 16), int("30", 16)])
-		temp += self.__indirizzo(indirizzo_iniziale)
-		temp += self.__indirizzo(indirizzo_finale)
-		temp += self.__indirizzo(indirizzo_esecuzione)
+		crc = 0
+		for elemento in p_buffer:
+			crc += elemento
 
-		a = self.__crc16(p_buffer)
-		temp += self.__crc16(p_buffer)
+		s2 = hex(crc)
+		temp += self.__indirizzo(s2)
 
-		temp += p_loader[10:] + p_buffer
+		temp += p_loader[11:] + p_buffer
 
 		self.dati = temp
 
