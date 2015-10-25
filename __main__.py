@@ -17,12 +17,12 @@ if __name__ == '__main__':
 
 	"""
 	# Legge il file dal disco
-	f = open(os.getcwd() + "/initgame/singload.bin", "rb")
+	f = open(os.getcwd() + "/initgame/rloader.bin", "rb")
 	buffer = f.read()
 	f.close()
 	print(buffer)
 	print()
-	print(buffer[7:])
+	# print(buffer[7:])
 	quit()
 	"""
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
 		# mia_cassetta.load(os.getcwd() + "/tapes/NV08B.CAS")
 
 		# blocco.importa(os.getcwd() + "/roms/super_cobra.rom")
-		#programma = "10 SCREEN 2 : CLS : KEY OFF\r\n20 PRINT \"GAME IS LOADING - www.ka7.eu\"\r\n30 BLOAD\"CAS:\",R\r\n40 BLOAD\"CAS:\",R\r\n"
+		programma = "10 SCREEN 2 : CLS : KEY OFF\r\n20 PRINT \"GAME IS LOADING - www.ka7.eu\"\r\n30 BLOAD\"CAS:\",R\r\n40 BLOAD\"CAS:\",R\r\n"
 		#mia_cassetta.importa_ascii("LOADER", programma)
 		mia_cassetta.importa_rom(os.getcwd() + "/roms/antarctic_adventure.rom")
 

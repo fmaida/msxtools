@@ -11,9 +11,18 @@ class FileBinario(BloccoDati):
 
 	# --=-=--------------------------------------------------------------------------=-=--
 
+	def __init__(self, p_titolo = "", p_dati = ""):
+		super().__init__(p_titolo, p_dati)
+		self.indirizzo_iniziale = 0x0000
+		self.indirizzo_finale = 0x0000
+		self.indirizzo_esecuzione = 0x0000
+
+	# --=-=--------------------------------------------------------------------------=-=--
+
 	def __indirizzo(self, p_valore: int, p_inverti=True):
-		valore_a = int(str(p_valore)[2:4], 16)
-		valore_b = int(str(p_valore)[4:7], 16)
+		temp = hex(p_valore)
+		valore_a = int(str(temp)[2:4], 16)
+		valore_b = int(str(temp)[4:7], 16)
 		if p_inverti:
 			return bytes([valore_b, valore_a])
 		else:
@@ -25,17 +34,11 @@ class FileBinario(BloccoDati):
 
 		# Legge l'indirizzo di esecuzione
 
-		indirizzo_iniziale = hex(0x9000)  # 0xA000  # int("A000", 16)
-		indirizzo_finale = hex(0x9000 + len(p_buffer) + len(p_loader) - 1)  # 0xD038
-		indirizzo_esecuzione = hex(0x9000)  # + len(p_buffer))  # 0xD000
+		self.indirizzo_iniziale = 0x9000  # 0xA000  # int("A000", 16)
+		self.indirizzo_finale = 0x9000 + len(p_buffer) + len(p_loader) - 1  # 0xD038
+		self.indirizzo_esecuzione = 0x9000  # + len(p_buffer))  # 0xD000
 
 		temp = b""
-
-		"""
-		temp += self.__indirizzo(indirizzo_iniziale)
-		temp += self.__indirizzo(indirizzo_finale)
-		temp += self.__indirizzo(indirizzo_esecuzione)
-		"""
 
 		"""
 		0..1) C348
@@ -45,37 +48,19 @@ class FileBinario(BloccoDati):
 		8..9) 0000
 		"""
 
-		a = p_loader
-
-		a += bytes([int("C3", 16)])
-		a += bytes([int("48", 16)])
-		a += bytes([int("90", 16)])
-		a += bytes([int("00", 16)])
-		a += bytes([int("7F", 16)])
-		a += bytes([int("FF", 16)])
-		a += bytes([int("40", 16)])
-		a += bytes([int("10", 16)])
-
-		#temp += Intestazioni.blocco_intestazione + FileBinario.intestazione + \
-		#	self.titolo.encode("ascii") + Intestazioni.blocco_intestazione
-
-		#temp += self.__indirizzo(indirizzo_iniziale)
-		#temp += self.__indirizzo(indirizzo_finale)
-		#temp += self.__indirizzo(indirizzo_esecuzione)
-
 		temp += bytes([0xC3, 0x30])  # bytes([int("C3", 16), int("30", 16)])
-		temp += self.__indirizzo(indirizzo_iniziale)
-		temp += self.__indirizzo(indirizzo_finale)
-		temp += self.__indirizzo(0x9000 + len(p_loader))
+		temp += self.__indirizzo(self.indirizzo_iniziale)
+		temp += self.__indirizzo(self.indirizzo_finale)
+		temp += self.__indirizzo(self.indirizzo_iniziale + len(p_loader))
 
 		crc = 0
 		for elemento in p_buffer:
 			crc += elemento
 
-		s2 = hex(crc)
-		temp += self.__indirizzo(s2)
+		temp += bytes([int(crc/256/256)])  # self.__indirizzo(crc)
 
-		temp += p_loader[11:] + p_buffer
+		temp += p_loader[9:]
+		temp += p_buffer
 
 		self.dati = temp
 
@@ -145,9 +130,16 @@ class FileBinario(BloccoDati):
 		# Apre il file sul disco
 		f = open(file_esportato, "wb")
 
-		f.write(bytes([int("FE", 16)]))
+		temp = b""
 
-		f.write(self.dati)
+		temp += bytes([0xFE])  # bytes([int("FE", 16)])
+		temp += self.__indirizzo(self.indirizzo_iniziale)
+		temp += self.__indirizzo(self.indirizzo_finale)
+		temp += self.__indirizzo(self.indirizzo_esecuzione)
+
+		temp += self.dati
+
+		f.write(temp)
 
 		f.close()
 
@@ -166,4 +158,3 @@ class FileBinario(BloccoDati):
 		p_file.inserisci_sincronismo(1500)  # Tre/quarti di secondo
 
 		p_file.inserisci_stringa(self.dati)
-		pass
