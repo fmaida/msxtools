@@ -202,14 +202,31 @@ class Cassetta:
 		8..9) 0000
 		"""
 
-		blocco = FileBinario()
-		blocco.titolo = os.path.splitext(os.path.basename(p_nome_file))[0]
+		programma = []
+		if len(buffer) <= 16384:
+			programma.append(buffer)
+		elif len(buffer) <= 32768:
+			programma.append(buffer[:16384])
+			programma.append(buffer[16384:])
+		else:
+			# Non supportato
+			pass
 
-		a = Loader.binari_16k_4000h
+		for indice, elemento in enumerate(programma):
+			blocco = FileBinario()
+			blocco.titolo = os.path.splitext(os.path.basename(p_nome_file))[0]
 
-		blocco.importa(buffer, a)
+			if len(programma) == 1:
+				a = Loader.binari_16k_4000h
+			else:
+				if indice == 0:
+					a = Loader.binari_32k_4000h
+				else:
+					a = Loader.binari_32k_8000h
 
-		self.aggiungi(blocco)
+			blocco.importa(elemento, a)
+
+			self.aggiungi(blocco)
 
 		"""
 		a = len(Loader.binari_32k_4000h)

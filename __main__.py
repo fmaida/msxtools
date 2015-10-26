@@ -17,12 +17,12 @@ if __name__ == '__main__':
 
 	"""
 	# Legge il file dal disco
-	f = open(os.getcwd() + "/initgame/rloader.bin", "rb")
+	f = open(os.getcwd() + "/initgame/INIT16K1.ASM", "rb")
 	buffer = f.read()
 	f.close()
 	print(buffer)
 	print()
-	# print(buffer[7:])
+	print(buffer[7:])
 	quit()
 	"""
 
@@ -40,10 +40,24 @@ if __name__ == '__main__':
 		# mia_cassetta.load(os.getcwd() + "/tapes/Shamus.cas")
 		# mia_cassetta.load(os.getcwd() + "/tapes/NV08B.CAS")
 
-		# blocco.importa(os.getcwd() + "/roms/super_cobra.rom")
-		programma = "10 SCREEN 2 : CLS : KEY OFF\r\n20 PRINT \"GAME IS LOADING - www.ka7.eu\"\r\n30 BLOAD\"CAS:\",R\r\n40 BLOAD\"CAS:\",R\r\n"
-		#mia_cassetta.importa_ascii("LOADER", programma)
-		mia_cassetta.importa_rom(os.getcwd() + "/roms/antarctic_adventure.rom")
+		# ROM da 8kb
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/super_cobra.rom")
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/super_snake.rom")
+
+		# ROM da 16kb
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/antarctic_adventure.rom")
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/road_fighter.rom")
+
+		# ROM da 32kb
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/brother_adventure.rom")
+		mia_cassetta.importa_rom(os.getcwd() + "/roms/block_hole.rom")
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/elevator_action.rom")
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/flashpoint.rom")
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/superboy.rom")
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/wonderboy.rom")
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/thexder.rom")
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/tritorn.rom")
+		# mia_cassetta.importa_rom(os.getcwd() + "/roms/twinbee.rom")
 
 	except msx.Eccezione as ex:
 		print("Whoops... something went wrong:\n{}".format(ex))
@@ -57,7 +71,11 @@ if __name__ == '__main__':
 
 	# print(mia_cassetta.cassetta[1].dati) # 0x9000,0xd1a3, 0xd000
 
+	mia_cassetta.cassetta[0].titolo = "game1"
 	mia_cassetta.cassetta[0].esporta_file(os.path.join(os.getcwd(), "export"))
+
+	mia_cassetta.cassetta[1].titolo = "game2"
+	mia_cassetta.cassetta[1].esporta_file(os.path.join(os.getcwd(), "export"))
 
 	# mia_cassetta.esporta_wav()
 

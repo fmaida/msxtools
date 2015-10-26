@@ -36,33 +36,15 @@ class FileBinario(BloccoDati):
 
 		self.indirizzo_iniziale = 0x9000  # 0xA000  # int("A000", 16)
 		self.indirizzo_finale = 0x9000 + len(p_buffer) + len(p_loader) - 1  # 0xD038
-		self.indirizzo_esecuzione = 0x9000  # + len(p_buffer))  # 0xD000
+		self.indirizzo_esecuzione = self.indirizzo_iniziale + len(p_buffer)  # 0xD000
 
 		temp = b""
 
-		"""
-		0..1) C348
-		2..3) 9000
-		4..5) 0000
-		6..7) 0000
-		8..9) 0000
-		"""
-
-		temp += bytes([0xC3, 0x30])  # bytes([int("C3", 16), int("30", 16)])
-		temp += self.__indirizzo(self.indirizzo_iniziale)
-		temp += self.__indirizzo(self.indirizzo_finale)
-		temp += self.__indirizzo(self.indirizzo_iniziale + len(p_loader))
-
-		crc = 0
-		for elemento in p_buffer:
-			crc += elemento
-
-		temp += bytes([int(crc/256/256)])  # self.__indirizzo(crc)
-
-		temp += p_loader[9:]
 		temp += p_buffer
+		temp += p_loader
 
 		self.dati = temp
+
 
 	def importa2(self, p_file):
 
