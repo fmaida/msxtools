@@ -45,22 +45,18 @@ class Cassetta:
         """
 
         self.buffer = ""
-        # try:
+        try:
 
-        # Legge il file .CAS dal disco
-        f = open(p_file, "rb")
-        self.buffer = f.read()
-        self.posizione = -1
-        f.close()
+            # Legge il file .CAS dal disco
+            f = open(p_file, "rb")
+            self.buffer = f.read()
+            self.posizione = -1
+            f.close()
 
-        blocco = self.estrai_blocchi()
+            self.estrai_blocchi()
 
-    # while not blocco is None:
-    #	# Memorizza il blocco
-    # 	blocco = self.estrai_prossimo_blocco()
-
-    # except:
-    #	raise Eccezione("Unable to find any tape called \"{0}\"".format(p_file))
+        except:
+            raise Eccezione("Unable to find any tape called \"{0}\"".format(p_file))
 
     # --=-=--------------------------------------------------------------------------=-=--
 

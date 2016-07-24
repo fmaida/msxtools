@@ -64,3 +64,4 @@ target/
 # che viene generata a livello di runtime
 *.wav
 export/
+output/

@@ -9,7 +9,7 @@ def get_rom(p_file):
     return os.path.join(os.getcwd(), "roms", p_file)
 
 
-def get_output(p_file):
+def get_output(p_file=""):
     return os.path.join(os.getcwd(), "output", p_file)
 
 
@@ -79,12 +79,12 @@ if __name__ == '__main__':
 
     # print(mia_cassetta.cassetta[1].dati) # 0x9000,0xd1a3, 0xd000
 
-    # mia_cassetta.cassetta[0].titolo = "aland"
-    # mia_cassetta.cassetta[0].esporta_file(os.path.join(os.getcwd(), "export"))
+    mia_cassetta.cassetta[0].titolo = "game1"
+    mia_cassetta.cassetta[0].esporta_file(get_output())
 
     # mia_cassetta.cassetta[1].titolo = "game2"
     # mia_cassetta.cassetta[1].esporta_file(os.path.join(os.getcwd(), "export"))
 
-    mia_cassetta.esporta(get_output("output.wav"))
+    # mia_cassetta.esporta(get_output("output.wav"))
 
     print(Cronometro.verifica())
