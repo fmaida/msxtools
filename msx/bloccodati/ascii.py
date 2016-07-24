@@ -5,42 +5,42 @@ from ..wav import Esportazione
 
 class FileAscii(BloccoDati):
 
-	intestazione = b"\xea" * 10
+    intestazione = b"\xea" * 10
 
-	# --=-=--------------------------------------------------------------------------=-=--
+    # --=-=--------------------------------------------------------------------------=-=--
 
-	def esporta(self, p_file: Esportazione):
+    def esporta(self, p_file: Esportazione):
 
-		p_file.inserisci_sincronismo(2500)  # Tre secondi
+        p_file.inserisci_sincronismo(2500)  # Tre secondi
 
-		intestazione = self.intestazione + self.titolo.encode("ascii")
+        intestazione = self.intestazione + self.titolo.encode("ascii")
 
-		p_file.inserisci_stringa(intestazione)
+        p_file.inserisci_stringa(intestazione)
 
-		p_file.inserisci_silenzio(1000)
+        p_file.inserisci_silenzio(1000)
 
-		p_file.inserisci_sincronismo(1500)  # Tre/quarti di secondo
+        p_file.inserisci_sincronismo(1500)  # Tre/quarti di secondo
 
-		ind = 0
-		conto = 0
-		continua = True
-		temp = ""
-		# p_file.inserisci_stringa(self.dati)
-		while continua:
-			if ind < (len(self.dati)):
-				a = self.dati[ind:ind+1]
-				b = ord(a)
-				p_file.inserisci_byte(b)
-				if conto > 255:
-					p_file.inserisci_silenzio(500)
-					p_file.inserisci_sincronismo(1000)
-					conto = 0
-			else:
-				p_file.inserisci_byte(26)
-				#temp += "[FINE]"
-				continua = False
-			ind += 1
-			conto += 1
+        ind = 0
+        conto = 0
+        continua = True
+        temp = ""
+        # p_file.inserisci_stringa(self.dati)
+        while continua:
+            if ind < (len(self.dati)):
+                a = self.dati[ind:ind + 1]
+                b = ord(a)
+                p_file.inserisci_byte(b)
+                if conto > 255:
+                    p_file.inserisci_silenzio(500)
+                    p_file.inserisci_sincronismo(1000)
+                    conto = 0
+            else:
+                p_file.inserisci_byte(26)
+                # temp += "[FINE]"
+                continua = False
+            ind += 1
+            conto += 1
 
-		# print("\"{0}\"\n--------------------------------".format(temp))
-		# print("{0} Bytes".format(len(temp) - len("[FINE]")))
+        # print("\"{0}\"\n--------------------------------".format(temp))
+        # print("{0} Bytes".format(len(temp) - len("[FINE]")))

@@ -4,76 +4,76 @@ from ..wav import Esportazione
 
 
 class BloccoDati:
-	"""
-	Questa classe gestisce la struttura di un blocco delle cassette MSX.
-	Un blocco può contenere un file di tipo ASCII, Binario, Basic o custom.
-	"""
+    """
+    Questa classe gestisce la struttura di un blocco delle cassette MSX.
+    Un blocco può contenere un file di tipo ASCII, Binario, Basic o custom.
+    """
 
-	intestazione = b""
+    intestazione = b""
 
-	# --=-=--------------------------------------------------------------------------=-=--
+    # --=-=--------------------------------------------------------------------------=-=--
 
-	def __init__(self, p_titolo = "", p_dati = ""):
-		"""
-		Costruttore della classe
+    def __init__(self, p_titolo="", p_dati=""):
+        """
+        Costruttore della classe
 
-		Returns:
-			None
-		"""
-		self._titolo = ""
-		self.titolo = p_titolo  # Titolo del file
-		self.dati = p_dati  # Dati che compongono il file memorizzato
+        Returns:
+            None
+        """
+        self._titolo = ""
+        self.titolo = p_titolo  # Titolo del file
+        self.dati = p_dati  # Dati che compongono il file memorizzato
 
-	# --=-=--------------------------------------------------------------------------=-=--
+    # --=-=--------------------------------------------------------------------------=-=--
 
-	@property
-	def titolo(self):
-		return self._titolo
+    @property
+    def titolo(self):
+        return self._titolo
 
-	@titolo.setter
-	def titolo(self, titolo):
-		if len(titolo) > 6:
-			titolo = titolo[0:6]
-		self._titolo = titolo.ljust(6, " ")
+    @titolo.setter
+    def titolo(self, titolo):
+        if len(titolo) > 6:
+            titolo = titolo[0:6]
+        self._titolo = titolo.ljust(6, " ")
 
-	# --=-=--------------------------------------------------------------------------=-=--
+    # --=-=--------------------------------------------------------------------------=-=--
 
-	def esporta(self, p_file: Esportazione):
-		pass
+    def esporta(self, p_file: Esportazione):
+        pass
 
-	# --=-=--------------------------------------------------------------------------=-=--
+    # --=-=--------------------------------------------------------------------------=-=--
 
-	def __len__(self):
-		"""
-		Restituisce la lunghezza di un blocco dati
+    def __len__(self):
+        """
+        Restituisce la lunghezza di un blocco dati
 
-		Returns:
-			La lunghezza del blocco dati
-		"""
-		return len(self.dati)
+        Returns:
+            La lunghezza del blocco dati
+        """
+        return len(self.dati)
 
-	# --=-=--------------------------------------------------------------------------=-=--
+    # --=-=--------------------------------------------------------------------------=-=--
 
-	def __str__(self):
-		"""
-		Offre una rappresentazione visuale del blocco dati
+    def __str__(self):
+        """
+        Offre una rappresentazione visuale del blocco dati
 
-		Returns:
-			Una stringa di testo
-		"""
+        Returns:
+            Una stringa di testo
+        """
 
-		tipo = self.__class__.__name__
-		if tipo == "FileAscii":
-			tipo = "ASCII"
-		elif tipo == "FileBasic":
-			tipo = "Basic"
-		elif tipo == "FileBinario":
-			tipo = "Binary"
-		else:
-			tipo = "Custom"
+        tipo = self.__class__.__name__
+        if tipo == "FileAscii":
+            tipo = "ASCII"
+        elif tipo == "FileBasic":
+            tipo = "Basic"
+        elif tipo == "FileBinario":
+            tipo = "Binary"
+        else:
+            tipo = "Custom"
 
-		if self.titolo != "":
-			temp = "\"{0}\" ({1})  [ {2} Bytes ] ".format(self.titolo, tipo.ljust(6), str(len(self.dati)).rjust(6))
-		else:
-			temp = "{0} ({1})  [ {2} Bytes ]".format(8 * " ", tipo.ljust(6), str(len(self.dati)).rjust(6))
-		return temp
+        if self.titolo != "":
+            temp = "\"{0}\" ({1})  [ {2} Bytes ] ".format(self.titolo, tipo.ljust(6), str(len(self.dati)).rjust(6))
+        else:
+            temp = "{0} ({1})  [ {2} Bytes ]".format(8 * " ", tipo.ljust(6), str(len(self.dati)).rjust(6))
+        return temp

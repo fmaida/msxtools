@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/MSX Tapes Tool.iml" filepath="$PROJECT_DIR$/.idea/MSX Tapes Tool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MSX Tape Tools.iml" filepath="$PROJECT_DIR$/.idea/MSX Tape Tools.iml" />
     </modules>
   </component>
 </project>
