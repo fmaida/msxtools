@@ -20,10 +20,12 @@ class FileBinario(BloccoDati):
     # --=-=--------------------------------------------------------------------------=-=--
 
     def __indirizzo(self, p_valore: int, p_inverti=True):
+
         temp = hex(p_valore)
         valore_a = int(str(temp)[2:4], 16)
         valore_b = int(str(temp)[4:7], 16)
         if p_inverti:
+            a = bytes([valore_b, valore_a])
             return bytes([valore_b, valore_a])
         else:
             return bytes([valore_a, valore_b])
@@ -35,13 +37,10 @@ class FileBinario(BloccoDati):
         # Legge l'indirizzo di esecuzione
 
         self.indirizzo_iniziale = 0x9000  # 0xA000  # int("A000", 16)
-        self.indirizzo_finale = 0x9000 + len(p_buffer) + len(p_loader) - 1  # 0xD038
+        self.indirizzo_finale = self.indirizzo_iniziale + len(p_buffer) + len(p_loader) - 1  # 0xD038
         self.indirizzo_esecuzione = self.indirizzo_iniziale + len(p_buffer)  # 0xD000
 
-        temp = b""
-
-        temp += p_buffer
-        temp += p_loader
+        temp = b"" + p_buffer + p_loader
 
         self.dati = temp
 
@@ -137,5 +136,9 @@ class FileBinario(BloccoDati):
         p_file.inserisci_silenzio(1000)
 
         p_file.inserisci_sincronismo(1500)  # Tre/quarti di secondo
+
+        p_file.inserisci_stringa(self.__indirizzo(self.indirizzo_iniziale))
+        p_file.inserisci_stringa(self.__indirizzo(self.indirizzo_finale))
+        p_file.inserisci_stringa(self.__indirizzo(self.indirizzo_esecuzione))
 
         p_file.inserisci_stringa(self.dati)
