@@ -3,6 +3,7 @@
 import os
 
 import msx
+from ui import Ui
 
 
 def get_rom(p_file):
@@ -15,26 +16,18 @@ def get_output(p_file=""):
 
 if __name__ == '__main__':
 
+    """
+
     # Test
 
     from cronometro import Cronometro
 
     # --=-=--------------------------------------------------------------------------=-=--
 
-    Cronometro.reset()
-
-    """
-    # Legge il file dal disco
-    f = open(os.getcwd() + "/initgame/INIT16K1.ASM", "rb")
-    buffer = f.read()
-    f.close()
-    print(buffer)
-    print()
-    print(buffer[7:])
-    quit()
-    """
+    # Cronometro.reset()
 
     mia_cassetta = msx.Cassetta()
+
     try:
         # mia_cassetta.load(os.getcwd() + "/tapes/ROADF.CAS")
         # mia_cassetta.load(os.getcwd() + "/tapes/berretti_verdi.cas")
@@ -53,7 +46,7 @@ if __name__ == '__main__':
         # mia_cassetta.importa_rom(os.getcwd() + "/roms/super_snake.rom")
 
         # ROM da 16kb
-        mia_cassetta.importa_rom(get_rom("athletic_land.rom"))
+        # mia_cassetta.importa_rom(get_rom("athletic_land.rom"))
         # mia_cassetta.importa_rom(os.getcwd() + "/roms/road_fighter.rom")
 
         # ROM da 32kb
@@ -67,13 +60,17 @@ if __name__ == '__main__':
         # mia_cassetta.importa_rom(os.getcwd() + "/roms/tritorn.rom")
         # mia_cassetta.importa_rom(os.getcwd() + "/roms/twinbee.rom")
 
-    except msx.Eccezione as ex:
-        print("Whoops... something went wrong:\n{}".format(ex))
+    # except msx.Eccezione as ex:
+    #    print("Whoops... something went wrong:\n{}".format(ex))
 
     print(Cronometro.verifica())
 
     print(mia_cassetta)
 
+    """
+
+
+    """
     # print("{0}\n----------------------------------\n{1} Bytes\n\n"
     #       .format(mia_cassetta.cassetta[0].dati, len(mia_cassetta.cassetta[0])))
 
@@ -88,3 +85,7 @@ if __name__ == '__main__':
     mia_cassetta.esporta(get_output("output.wav"))
 
     print(Cronometro.verifica())
+    """
+
+    ui = Ui()
+    ui.cmdloop()
