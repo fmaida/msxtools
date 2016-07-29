@@ -41,7 +41,7 @@ class Ui(cmd.Cmd):
                     print(file + "/")
 
         print()
-        
+
     def do_open(self, p_file):
         try:
             if p_file.endswith(".cas"):
