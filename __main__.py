@@ -87,5 +87,10 @@ if __name__ == '__main__':
     print(Cronometro.verifica())
     """
 
-    ui = Ui()
-    ui.cmdloop()
+    # ui = Ui()
+    # ui.cmdloop()
+
+    cas = msx.Cassetta()
+    cas.load(os.getcwd() + "/tapes/puf_puf.cas")
+    print(cas)
+    cas.esporta("output.wav")

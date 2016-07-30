@@ -43,15 +43,15 @@ class Ui(cmd.Cmd):
         print()
 
     def do_open(self, p_file):
-        try:
+        # try:
             if p_file.endswith(".cas"):
                 self.cassetta.load(join(self.directory, p_file))
                 print(self.cassetta)
             elif p_file.endswith(".rom"):
                 self.cassetta.importa_rom(join(self.directory, p_file))
                 print("ROM '{0}' has been loaded".format(p_file))
-        except msx.Eccezione as e:
-            print("Fatal error: " + str(e.parameter))
+        # except msx.Eccezione as e:
+        #    print("Fatal error: " + str(e.parameter))
 
     def do_bitrate(self, p_valore):
         try:

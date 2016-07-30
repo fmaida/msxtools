@@ -3,6 +3,7 @@ import os
 from .generico import BloccoDati
 from ..intestazioni import Intestazioni
 from ..wav import Esportazione
+from ..strumenti import Indirizzo
 
 
 class FileBinario(BloccoDati):
@@ -13,22 +14,13 @@ class FileBinario(BloccoDati):
 
     def __init__(self, p_titolo="", p_dati=""):
         super().__init__(p_titolo, p_dati)
-        self.indirizzo_iniziale = 0x0000
-        self.indirizzo_finale = 0x0000
-        self.indirizzo_esecuzione = 0x0000
+        self.indirizzo_iniziale = Indirizzo(0x0000)
+        self.indirizzo_finale = Indirizzo(0x0000)
+        self.indirizzo_esecuzione = Indirizzo(0x0000)
 
     # --=-=--------------------------------------------------------------------------=-=--
 
-    def __indirizzo(self, p_valore: int, p_inverti=True):
 
-        temp = hex(p_valore)
-        valore_a = int(str(temp)[2:4], 16)
-        valore_b = int(str(temp)[4:7], 16)
-        if p_inverti:
-            a = bytes([valore_b, valore_a])
-            return bytes([valore_b, valore_a])
-        else:
-            return bytes([valore_a, valore_b])
 
     # --=-=--------------------------------------------------------------------------=-=--
 
@@ -36,7 +28,7 @@ class FileBinario(BloccoDati):
 
         # Legge l'indirizzo di esecuzione
 
-        self.indirizzo_iniziale = 0x9000  # 0xA000  # int("A000", 16)
+        self.indirizzo_iniziale = Indirizzo(0x9000)  # 0xA000  # int("A000", 16)
         self.indirizzo_finale = self.indirizzo_iniziale + len(p_buffer) + len(p_loader) - 1  # 0xD038
         self.indirizzo_esecuzione = self.indirizzo_iniziale + len(p_buffer)  # 0xD000
 
@@ -54,7 +46,7 @@ class FileBinario(BloccoDati):
         # Cambia il titolo prendendolo dal nome del file
         self.titolo = os.path.splitext(os.path.basename(p_file))[0]
 
-        indirizzo_iniziale = 0x9000  # 0xA000  # int("A000", 16)
+        indirizzo_iniziale = Indirizzo(0x9000)  # 0xA000  # int("A000", 16)
         indirizzo_esecuzione = indirizzo_iniziale + len(buffer)  # C000
 
         temp = Intestazioni.blocco_intestazione + FileBinario.intestazione + \
@@ -113,9 +105,9 @@ class FileBinario(BloccoDati):
         temp = b""
 
         temp += bytes([0xFE])  # bytes([int("FE", 16)])
-        temp += self.__indirizzo(self.indirizzo_iniziale)
-        temp += self.__indirizzo(self.indirizzo_finale)
-        temp += self.__indirizzo(self.indirizzo_esecuzione)
+        temp += self.indirizzo_iniziale.get()
+        temp += self.indirizzo_finale.get()
+        temp += self.indirizzo_esecuzione.get()
 
         temp += self.dati
 
@@ -137,8 +129,8 @@ class FileBinario(BloccoDati):
 
         p_file.inserisci_sincronismo(1500)  # Tre/quarti di secondo
 
-        p_file.inserisci_stringa(self.__indirizzo(self.indirizzo_iniziale))
-        p_file.inserisci_stringa(self.__indirizzo(self.indirizzo_finale))
-        p_file.inserisci_stringa(self.__indirizzo(self.indirizzo_esecuzione))
+        p_file.inserisci_stringa(self.indirizzo_iniziale.get())
+        p_file.inserisci_stringa(self.indirizzo_finale.get())
+        p_file.inserisci_stringa(self.indirizzo_esecuzione.get())
 
         p_file.inserisci_stringa(self.dati)

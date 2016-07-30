@@ -96,24 +96,6 @@ class Cassetta:
 
     # --=-=--------------------------------------------------------------------------=-=--
 
-    def rimuovi(self, p_indice):
-        """
-        Rimuove un blocco specifico dalla cassetta
-
-        Args:
-            p_indice: Indice del blocco da rimuovere
-
-        Returns:
-            None se risce ad eliminare il blocco, altrimenti solleva un'eccezione
-        """
-
-        if p_indice < len(self.cassetta):
-            self.cassetta.remove(p_indice)
-        else:
-            raise Eccezione("The tape element you want to remove is out of bounds")
-
-    # --=-=--------------------------------------------------------------------------=-=--
-
     def importa(self, p_dati_grezzi):
         """
         Importa il primo blocco dati che trova a partire dai dati grezzi
@@ -267,6 +249,24 @@ class Cassetta:
 
     # --=-=--------------------------------------------------------------------------=-=--
 
+    def rimuovi(self, p_indice):
+        """
+        Rimuove un blocco specifico dalla cassetta
+
+        Args:
+            p_indice: Indice del blocco da rimuovere
+
+        Returns:
+            None se risce ad eliminare il blocco, altrimenti solleva un'eccezione
+        """
+
+        if p_indice < len(self.cassetta):
+            self.cassetta.remove(p_indice)
+        else:
+            raise Eccezione("The tape element you want to remove is out of bounds")
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
     def esporta(self, p_nome_file="output.wav", p_numero_file=-1):
         """
         Test
@@ -321,4 +321,4 @@ class Cassetta:
             temp += "{0} Files found\n".format(str(len(self.cassetta))).rjust(40)
             return temp
         else:
-            raise Eccezione("Tape is empty")
+            raise Eccezione("Tape is currently empty")
