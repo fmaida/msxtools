@@ -22,6 +22,7 @@ class BloccoDati:
         """
         self._titolo = ""
         self.titolo = p_titolo  # Titolo del file
+        self._dati = b""
         self.dati = p_dati  # Dati che compongono il file memorizzato
 
     # --=-=--------------------------------------------------------------------------=-=--
@@ -35,6 +36,16 @@ class BloccoDati:
         if len(titolo) > 6:
             titolo = titolo[0:6]
         self._titolo = titolo.ljust(6, " ")
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
+    @property
+    def dati(self):
+        return self._dati
+
+    @dati.setter
+    def dati(self, p_valore):
+        self._dati = p_valore
 
     # --=-=--------------------------------------------------------------------------=-=--
 

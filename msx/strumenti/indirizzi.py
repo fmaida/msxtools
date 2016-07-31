@@ -13,6 +13,9 @@ class Indirizzo:
         self.valore_a = int(str(temp)[0:2], 16)
         self.valore_b = int(str(temp)[2:4], 16)
 
+    def importa(self, p_valore):
+        self.imposta(p_valore[1] * 256 + p_valore[0])
+
     def get(self, p_inverti: bool = True) -> bytes:
 
         if p_inverti:

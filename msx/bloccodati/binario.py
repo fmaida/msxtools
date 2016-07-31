@@ -7,25 +7,33 @@ from ..strumenti import Indirizzo
 
 
 class FileBinario(BloccoDati):
-
     intestazione = b"\xd0" * 10  # chr(int(0xD0)) * 10
 
     # --=-=--------------------------------------------------------------------------=-=--
 
     def __init__(self, p_titolo="", p_dati=""):
         super().__init__(p_titolo, p_dati)
-        self.indirizzo_iniziale = Indirizzo(0x0000)
-        self.indirizzo_finale = Indirizzo(0x0000)
-        self.indirizzo_esecuzione = Indirizzo(0x0000)
+        self.indirizzo_iniziale = Indirizzo()
+        self.indirizzo_finale = Indirizzo()
+        self.indirizzo_esecuzione = Indirizzo()
 
     # --=-=--------------------------------------------------------------------------=-=--
 
+    @property
+    def dati(self):
+        return self._dati
 
+    @dati.setter
+    def dati(self, p_valore):
+        if p_valore != "":
+            self.indirizzo_iniziale.importa(p_valore[0:2])
+            self.indirizzo_finale.importa(p_valore[2:4])
+            self.indirizzo_esecuzione.importa(p_valore[4:6])
+        self._dati = p_valore[6:]
 
     # --=-=--------------------------------------------------------------------------=-=--
 
     def importa(self, p_buffer, p_loader):
-
         # Legge l'indirizzo di esecuzione
 
         self.indirizzo_iniziale = Indirizzo(0x9000)  # 0xA000  # int("A000", 16)
@@ -37,7 +45,6 @@ class FileBinario(BloccoDati):
         self.dati = temp
 
     def importa2(self, p_file):
-
         # Legge il file .CAS dal disco
         f = open(p_file, "rb")
         buffer = f.read()
@@ -96,7 +103,6 @@ class FileBinario(BloccoDati):
     # --=-=--------------------------------------------------------------------------=-=--
 
     def esporta_file(self, p_percorso):
-
         file_esportato = os.path.join(p_percorso, self.titolo.strip() + ".bin")
 
         # Apre il file sul disco
