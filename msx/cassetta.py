@@ -4,6 +4,7 @@ from .bloccodati import FileAscii, FileBasic, FileBinario, FileCustom
 from .intestazioni import Intestazioni
 from .loader import Loader
 from .eccezioni import Eccezione
+from .ricerche import Ricerca
 from .wav import Esportazione
 
 
@@ -26,10 +27,11 @@ class Cassetta:
         """
 
         # Inizializza i vari array, per partire con una nuova cassetta
-        self.cassetta = []  # Array che contiene i blocchi di dati che compongono la cassetta
+        self._cassetta = []  # Array che contiene i blocchi di dati che compongono la cassetta
         self.buffer = ""  # Buffer dati in cui immagazzina temporaneamente il file .cas da analizzare
         self.indice = -1
         self.posizione = -1
+        self._ricerca = Ricerca()
 
     # --=-=--------------------------------------------------------------------------=-=--
 
@@ -75,24 +77,10 @@ class Cassetta:
             fine_blocco, blocco = self.importa(self.buffer)
 
             # Aggiunge il blocco che ha trovato alla cassetta
-            self.cassetta.append(blocco)
+            self._cassetta.append(blocco)
 
             # Riduce il buffer togliendo tutto il blocco che ha appena scovato
             self.buffer = self.buffer[fine_blocco:len(self.buffer)]
-
-    # --=-=--------------------------------------------------------------------------=-=--
-
-    def aggiungi(self, p_blocco):
-        """
-        Aggiunge un nuovo blocco-dati alla cassetta
-
-        Args:
-          p_blocco: I dati effettivi del blocco
-
-        Returns:
-            None
-        """
-        self.cassetta.append(p_blocco)
 
     # --=-=--------------------------------------------------------------------------=-=--
 
@@ -165,6 +153,20 @@ class Cassetta:
             blocco.dati = p_dati_grezzi
 
         return fine_dati, blocco
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
+    def aggiungi(self, p_blocco):
+        """
+        Aggiunge un nuovo blocco-dati alla cassetta
+
+        Args:
+          p_blocco: I dati effettivi del blocco
+
+        Returns:
+            None
+        """
+        self._cassetta.append(p_blocco)
 
     # --=-=--------------------------------------------------------------------------=-=--
 

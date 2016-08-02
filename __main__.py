@@ -91,7 +91,7 @@ if __name__ == '__main__':
     # ui.cmdloop()
 
     cas = msx.Cassetta()
-    cas.load(os.getcwd() + "/tapes/NV08B.CAS")
+    cas.load(os.getcwd() + "/tapes/nv08b.cas")
     print(cas)
     print(str(cas.cassetta[0].dati))
     print(str(cas.cassetta[1].dati))
