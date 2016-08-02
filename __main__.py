@@ -91,7 +91,11 @@ if __name__ == '__main__':
     # ui.cmdloop()
 
     cas = msx.Cassetta()
-    cas.load(os.getcwd() + "/tapes/puf_puf.cas")
+    cas.load(os.getcwd() + "/tapes/NV08B.CAS")
     print(cas)
-    cas.cassetta[2].esporta_file(get_output())
+    print(str(cas.cassetta[0].dati))
+    print(str(cas.cassetta[1].dati))
+    print(str(cas.cassetta[2].dati))
+    print(str(cas.cassetta[136].dati))
+    cas.esporta(get_output())
     # esporta("output.wav")

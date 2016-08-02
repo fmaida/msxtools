@@ -322,3 +322,8 @@ class Cassetta:
             return temp
         else:
             raise Eccezione("Tape is currently empty")
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
+    def __len__(self):
+        return len(self.cassetta)
