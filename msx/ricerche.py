@@ -85,14 +85,12 @@ class Ricerca:
         # appena rilevato è di tipo ASCII e se il blocco finisce con un carattere
         # di EOF
         if blocco.tipo is FileAscii:
-            print(blocco.dati)
-            finale = int.from_bytes(blocco.dati[-1:], byteorder='big')
-            print(finale)
-            contiene_eof = blocco.dati.find(b"\x1a")
+            # print(blocco.dati)
+            contiene_eof = blocco.dati.find(b"\x1a") >= 0
             while not contiene_eof:
                 altro_blocco = self.ricerca_blocco()
                 blocco += altro_blocco
-                contiene_eof = altro_blocco.dati.find(b"\x1a")
+                contiene_eof = altro_blocco.dati.find(b"\x1a") >= 0
         return blocco
 
     # --=-=--------------------------------------------------------------------------=-=--

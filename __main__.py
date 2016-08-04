@@ -91,7 +91,7 @@ if __name__ == '__main__':
     # ui.cmdloop()
 
     cas = msx.Cassetta()
-    cas.load(os.getcwd() + "/tapes/msx_computer_magazine_06.cas")
+    cas.load(os.getcwd() + "/tapes/boulder_dash.cas")
     print(cas)
     # print(str(cas.cassetta[0].dati))
     # print(str(cas.cassetta[1].dati))

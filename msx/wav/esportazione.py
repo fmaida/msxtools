@@ -11,7 +11,7 @@ import wave
 
 class Esportazione:
 
-    max_buffer = 1024
+    max_buffer = 16384  # 16Kb
 
     def __init__(self, p_file_output="output.wav"):
         """
