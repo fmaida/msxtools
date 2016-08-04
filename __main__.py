@@ -4,6 +4,7 @@ import os
 
 import msx
 from ui import Ui
+from cronometro import Cronometro
 
 
 def get_rom(p_file):
@@ -20,11 +21,9 @@ if __name__ == '__main__':
 
     # Test
 
-    from cronometro import Cronometro
+
 
     # --=-=--------------------------------------------------------------------------=-=--
-
-    # Cronometro.reset()
 
     mia_cassetta = msx.Cassetta()
 
@@ -90,12 +89,17 @@ if __name__ == '__main__':
     # ui = Ui()
     # ui.cmdloop()
 
+    Cronometro.reset()
+
     cas = msx.Cassetta()
-    cas.load(os.getcwd() + "/tapes/boulder_dash.cas")
+    # cas.load(os.getcwd() + "/tapes/lazy_jones.cas")
+    cas.importa_rom(os.getcwd() + "/roms/antarctic_adventure.rom")
     print(cas)
-    # print(str(cas.cassetta[0].dati))
-    # print(str(cas.cassetta[1].dati))
+    print(str(cas._cassetta[0].dati))
+    # print(str(cas._cassetta[1].esporta_file (get_output())))
     # print(str(cas.cassetta[2].dati))
     # print(str(cas.cassetta[136].dati))
     cas.esporta(get_output("output.wav"))
     # esporta("output.wav")
+
+    print(Cronometro.verifica())

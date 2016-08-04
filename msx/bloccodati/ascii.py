@@ -31,13 +31,16 @@ class FileAscii(BloccoDati):
                 a = self.dati[ind:ind + 1]
                 b = ord(a)
                 p_file.inserisci_byte(b)
-                if conto > 255:
+                if conto >= 255:
                     p_file.inserisci_silenzio(500)
                     p_file.inserisci_sincronismo(1000)
                     conto = 0
             else:
-                p_file.inserisci_byte(26)
+                # p_file.inserisci_byte(26)
                 # temp += "[FINE]"
+                while conto < 255:
+                    p_file.inserisci_byte(26)  # EOF
+                    conto += 1
                 continua = False
             ind += 1
             conto += 1

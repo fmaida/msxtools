@@ -25,3 +25,4 @@ class Indirizzo:
 
     def __add__(self, p_altro):
         self.imposta(self.valore + p_altro)
+        return self

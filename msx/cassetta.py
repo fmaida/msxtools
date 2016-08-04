@@ -1,6 +1,7 @@
 import os
 
 from .intestazioni import Intestazioni
+from .bloccodati import FileBinario
 from .loader import Loader
 from .eccezioni import Eccezione
 from .ricerche import Ricerca
