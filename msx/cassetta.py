@@ -1,6 +1,5 @@
 import os
 
-from .bloccodati import FileAscii, FileBasic, FileBinario, FileCustom
 from .intestazioni import Intestazioni
 from .loader import Loader
 from .eccezioni import Eccezione
@@ -28,7 +27,7 @@ class Cassetta:
 
         # Inizializza i vari array, per partire con una nuova cassetta
         self._cassetta = []  # Array che contiene i blocchi di dati che compongono la cassetta
-        self.buffer = ""  # Buffer dati in cui immagazzina temporaneamente il file .cas da analizzare
+        self._ricerca = Ricerca()  # Buffer dati in cui immagazzina temporaneamente il file .cas da analizzare
         self.indice = -1
         self.posizione = -1
         self._ricerca = Ricerca()
@@ -46,113 +45,25 @@ class Cassetta:
 
         """
 
-        self.buffer = ""
-        try:
+        #try:
 
-            # Legge il file .CAS dal disco
-            f = open(p_file, "rb")
-            self.buffer = f.read()
-            self.posizione = -1
-            f.close()
-
-            self.estrai_blocchi()
-
-        except:
-            raise Eccezione("Unable to find any tape called \"{0}\"".format(p_file))
-
-    # --=-=--------------------------------------------------------------------------=-=--
-
-    def estrai_blocchi(self):
-        """
-        Tenta di estrarre dal buffer uno o più blocchi dati (Ascii, Basic, Binario o custom)
-
-        Returns:
-            None
-        """
+        # Legge il file .CAS dal disco
+        f = open(p_file, "rb")
+        self._ricerca.buffer = f.read()
+        # self.posizione = -1
+        f.close()
 
         # Finchè resta qualcosa nel buffer da analizzare...
-        while len(self.buffer) > 0:
+        while not self._ricerca.eof():
             # Con quello che gli rimane del buffer va alla ricerca del
             # primo blocco che riesce a trovare
-            fine_blocco, blocco = self.importa(self.buffer)
+            blocco = self._ricerca.ricerca_blocco()
 
             # Aggiunge il blocco che ha trovato alla cassetta
             self._cassetta.append(blocco)
 
-            # Riduce il buffer togliendo tutto il blocco che ha appena scovato
-            self.buffer = self.buffer[fine_blocco:len(self.buffer)]
-
-    # --=-=--------------------------------------------------------------------------=-=--
-
-    def importa(self, p_dati_grezzi):
-        """
-        Importa il primo blocco dati che trova a partire dai dati grezzi
-
-        Args:
-            p_dati_grezzi: Dati grezzi da cui estrae un blocco da importare
-
-        Returns:
-            Un indice al primo byte successivo alla fine del blocco che ha trovato,
-            in modo da poter richiamare nuovamente la funzione importa per cercare
-            il blocco successivo.
-        """
-
-        fine_dati = -1
-
-        # Il blocco inizia con un'intestazione ?
-        if Intestazioni.contiene_intestazione(p_dati_grezzi):
-
-            # Si. Vuol dire che si tratta di un blocco ASCII, Basic, Binario o custom
-
-            inizio_intestazione = len(Intestazioni.blocco_intestazione)
-
-            # print("Intestazione: {0}-{1} - Dati: {1}-{2}".format(str(inizio_intestazione),
-            # str(inizio_dati), str(fine_dati)))
-
-            # Cerca il tipo del file
-            tipo_blocco = p_dati_grezzi[inizio_intestazione:inizio_intestazione + 10]
-            if tipo_blocco == FileAscii.intestazione:
-                blocco = FileAscii()
-            elif tipo_blocco == FileBasic.intestazione:
-                blocco = FileBasic()
-            elif tipo_blocco == FileBinario.intestazione:
-                blocco = FileBinario()
-            else:
-                blocco = FileCustom()
-
-            # Cerca il titolo del file
-            if blocco.__class__.__name__ != "FileCustom":
-                inizio_titolo = inizio_intestazione + len(tipo_blocco)
-                fine_titolo = inizio_titolo + 6
-                blocco.titolo = p_dati_grezzi[inizio_titolo:fine_titolo].decode("ascii")
-            else:
-                blocco._titolo = ""
-
-            # Cerca di individuare l'inizio e la fine della parte dati
-            if blocco.__class__.__name__ != "FileCustom":
-                inizio_dati = p_dati_grezzi.find(Intestazioni.blocco_intestazione, inizio_intestazione) + len(
-                    Intestazioni.blocco_intestazione)
-            else:
-                inizio_dati = inizio_intestazione
-
-            fine_dati = p_dati_grezzi.find(Intestazioni.blocco_intestazione,
-                                           inizio_dati + len(Intestazioni.blocco_intestazione))
-
-            # Se non trova la fine dei dati vuol dire che è arrivato alla fine della
-            # cassetta e non ci sono altre intestazioni da trovare. Prende come dimensione
-            # massima la lunghezza complessiva del blocco
-            if fine_dati < 0:
-                fine_dati = len(p_dati_grezzi)
-
-            # Memorizza il blocco dati
-            blocco.dati = p_dati_grezzi[inizio_dati:fine_dati]
-
-        else:
-            # No. Non ha un'intestazione... allora è per forza un blocco custom
-            blocco = FileCustom()
-            blocco.dati = p_dati_grezzi
-
-        return fine_dati, blocco
+        #except:
+        #    raise Eccezione("Unable to find any tape called \"{0}\"".format(p_file))
 
     # --=-=--------------------------------------------------------------------------=-=--
 
@@ -283,12 +194,12 @@ class Cassetta:
 
         suono = Esportazione(p_nome_file)
         if p_numero_file < 0:
-            for ind, blocco in enumerate(self.cassetta):
+            for ind, blocco in enumerate(self._cassetta):
                 blocco.esporta(suono)
-                if ind < (len(self.cassetta) - 1):
+                if ind < (len(self._cassetta) - 1):
                     suono.inserisci_silenzio(4000)
         else:
-            self.cassetta[p_numero_file].esporta(suono)
+            self._cassetta[p_numero_file].esporta(suono)
         suono.chiudi()
 
     # --=-=--------------------------------------------------------------------------=-=--
@@ -314,13 +225,13 @@ class Cassetta:
         """
 
         temp = ""
-        if len(self.cassetta) > 0:
+        if len(self._cassetta) > 0:
             temp += "TAPE CONTENT:\n"
             temp += "-" * 39 + "\n"
-            for indice, elemento in enumerate(self.cassetta):
+            for indice, elemento in enumerate(self._cassetta):
                 temp += "{0}) {1}\n".format(str(indice + 1).rjust(2), str(elemento))
             temp += "-" * 39 + "\n"
-            temp += "{0} Files found\n".format(str(len(self.cassetta))).rjust(40)
+            temp += "{0} Files found\n".format(str(len(self._cassetta))).rjust(40)
             return temp
         else:
             raise Eccezione("Tape is currently empty")
@@ -328,4 +239,4 @@ class Cassetta:
     # --=-=--------------------------------------------------------------------------=-=--
 
     def __len__(self):
-        return len(self.cassetta)
+        return len(self._cassetta)

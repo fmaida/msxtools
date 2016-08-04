@@ -13,6 +13,12 @@ class BloccoDati:
 
     # --=-=--------------------------------------------------------------------------=-=--
 
+    @property
+    def tipo(self):
+        return self.__class__
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
     def __init__(self, p_titolo="", p_dati=""):
         """
         Costruttore della classe
@@ -88,3 +94,18 @@ class BloccoDati:
         else:
             temp = "{0} ({1})  [ {2} Bytes ]".format(8 * " ", tipo.ljust(6), str(len(self.dati)).rjust(6))
         return temp
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
+    def __add__(self, p_altro_blocco):
+        """
+        Aggiunge altri dati in coda al blocco
+
+        Args:
+            p_altro_blocco: L'altro blocco con i dati da aggiungere
+
+        Returns:
+            Se stesso
+        """
+        self.dati += p_altro_blocco.dati
+        return self

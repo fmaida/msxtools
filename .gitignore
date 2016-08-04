@@ -62,6 +62,7 @@ target/
 
 # Roba specifica del mio progetto
 # che viene generata a livello di runtime
+.DS_Store
 *.wav
 export/
 output/
