@@ -1,7 +1,7 @@
 import os
 
 from .intestazioni import Intestazioni
-from .bloccodati import FileBinario
+from .bloccodati import FileBinario, FileAscii
 from .loader import Loader
 from .eccezioni import Eccezione
 from .ricerche import Ricerca
@@ -84,6 +84,13 @@ class Cassetta:
 
     def importa_rom(self, p_nome_file):
 
+
+        blocco_loader = FileAscii()
+        blocco_loader.titolo = os.path.splitext(os.path.basename(p_nome_file))[0]
+        blocco_loader.dati = b'1 POKE&HFBB0,1:POKE&HFBB1,1:KEYOFF:SCREEN0:WIDTH 40:COLOR15,8,8\r\n3 LOCATE12,9:PRINT" NOW LOADING "\r\n4 LOCATE14,12:PRINT"PLEASE WAIT"\r\n5 LOCATE8,18:PRINT"Copyright 2016 Kaiko"\r\n6 BLOAD"cas:",R\r\n7 GOTO 6\r\n\x1a\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+
+        self.aggiungi(blocco_loader)
+
         # Legge il file .ROM dal disco
         f = open(p_nome_file, "rb")
         buffer = f.read()
@@ -109,7 +116,7 @@ class Cassetta:
 
         for indice, elemento in enumerate(programma):
             blocco = FileBinario()
-            blocco.titolo = os.path.splitext(os.path.basename(p_nome_file))[0]
+            blocco.titolo = "DATA" + str(indice + 1)  # os.path.splitext(os.path.basename(p_nome_file))[0]
 
             if len(programma) == 1:
                 a = Loader.binari_16k_4000h
@@ -119,7 +126,7 @@ class Cassetta:
                 else:
                     a = Loader.binari_32k_8000h
 
-            blocco.importa(elemento, a)
+            blocco.importa_rom(elemento, a)
 
             self.aggiungi(blocco)
 

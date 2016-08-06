@@ -24,14 +24,15 @@ class FileAscii(BloccoDati):
         ind = 0
         conto = 0
         continua = True
-        temp = ""
+        temp = b""
         # p_file.inserisci_stringa(self.dati)
         while continua:
             if ind < (len(self.dati)):
                 a = self.dati[ind:ind + 1]
                 b = ord(a)
                 p_file.inserisci_byte(b)
-                if conto >= 255:
+                temp += a
+                if conto > 255:
                     p_file.inserisci_silenzio(500)
                     p_file.inserisci_sincronismo(1000)
                     conto = 0
@@ -40,6 +41,7 @@ class FileAscii(BloccoDati):
                 # temp += "[FINE]"
                 while conto < 255:
                     p_file.inserisci_byte(26)  # EOF
+                    temp += b"\x1a"
                     conto += 1
                 continua = False
             ind += 1
@@ -47,3 +49,5 @@ class FileAscii(BloccoDati):
 
         # print("\"{0}\"\n--------------------------------".format(temp))
         # print("{0} Bytes".format(len(temp) - len("[FINE]")))
+        print(temp)
+        print(len(temp))

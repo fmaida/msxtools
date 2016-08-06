@@ -92,10 +92,11 @@ if __name__ == '__main__':
     Cronometro.reset()
 
     cas = msx.Cassetta()
-    # cas.load(os.getcwd() + "/tapes/lazy_jones.cas")
-    cas.importa_rom(os.getcwd() + "/roms/antarctic_adventure.rom")
+    # cas.load(os.getcwd() + "/tapes/guttblaster.cas")
+    cas.importa_rom(os.getcwd() + "/roms/block_hole.rom")
     print(cas)
     print(str(cas._cassetta[0].dati))
+    print(str(len(cas._cassetta[0].dati)))
     # print(str(cas._cassetta[1].esporta_file (get_output())))
     # print(str(cas.cassetta[2].dati))
     # print(str(cas.cassetta[136].dati))

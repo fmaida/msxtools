@@ -33,16 +33,18 @@ class FileBinario(BloccoDati):
 
     # --=-=--------------------------------------------------------------------------=-=--
 
-    def importa(self, p_buffer, p_loader):
+    def importa_rom(self, p_buffer: bytearray, p_loader: bytearray):
         # Legge l'indirizzo di esecuzione
 
         self.indirizzo_iniziale = Indirizzo(0x9000)  # 0xA000  # int("A000", 16)
-        self.indirizzo_finale = self.indirizzo_iniziale + (len(p_buffer) + len(p_loader) - 1)  # 0xD038
-        self.indirizzo_esecuzione = self.indirizzo_iniziale + len(p_buffer)  # 0xD000
+        self.indirizzo_finale = Indirizzo(self.indirizzo_iniziale.valore + (len(p_buffer) + len(p_loader) - 1))  # 0xD038
+        self.indirizzo_esecuzione = Indirizzo(self.indirizzo_iniziale.valore + len(p_buffer))  # 0xD000
 
-        temp = b"" + p_buffer + p_loader
+        temp = p_buffer + p_loader
 
-        self.dati = temp
+        self._dati = temp
+
+    # --=-=--------------------------------------------------------------------------=-=--
 
     def importa2(self, p_file):
         # Legge il file .CAS dal disco

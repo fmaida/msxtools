@@ -23,6 +23,9 @@ class Indirizzo:
         else:
             return bytes([self.valore_a, self.valore_b])
 
-    def __add__(self, p_altro):
+    def __str__(self):
+        return "{0} ({1})".format(hex(self.valore), str(self.valore))
+
+    def __radd__(self, p_altro):
         self.imposta(self.valore + p_altro)
         return self
