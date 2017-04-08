@@ -1,9 +1,7 @@
-#!/usr/bin/env python
-
 import os
 
 import msx
-from ui import Ui
+#from ui import Ui
 from cronometro import Cronometro
 
 
@@ -17,18 +15,14 @@ def get_output(p_file=""):
 
 if __name__ == '__main__':
 
-    """
-
     # Test
-
-
 
     # --=-=--------------------------------------------------------------------------=-=--
 
     mia_cassetta = msx.Cassetta()
 
     try:
-        # mia_cassetta.load(os.getcwd() + "/tapes/ROADF.CAS")
+	# mia_cassetta.load(os.getcwd() + "/tapes/ROADF.CAS")
         # mia_cassetta.load(os.getcwd() + "/tapes/berretti_verdi.cas")
         # mia_cassetta.load(os.getcwd() + "/tapes/guttblaster.cas")
         # mia_cassetta.load(os.getcwd() + "/tapes/lazy_jones.cas")
@@ -49,6 +43,7 @@ if __name__ == '__main__':
         # mia_cassetta.importa_rom(os.getcwd() + "/roms/road_fighter.rom")
 
         # ROM da 32kb
+        mia_cassetta.importa_rom(os.getcwd() + "/roms/gunsmoke.rom")
         # mia_cassetta.importa_rom(os.getcwd() + "/roms/brother_adventure.rom")
         # mia_cassetta.importa_rom(os.getcwd() + "/roms/block_hole.rom")
         # mia_cassetta.importa_rom(os.getcwd() + "/roms/elevator_action.rom")
@@ -59,48 +54,46 @@ if __name__ == '__main__':
         # mia_cassetta.importa_rom(os.getcwd() + "/roms/tritorn.rom")
         # mia_cassetta.importa_rom(os.getcwd() + "/roms/twinbee.rom")
 
-    # except msx.Eccezione as ex:
-    #    print("Whoops... something went wrong:\n{}".format(ex))
+    except msx.Eccezione as ex:
+    	print("Whoops... something went wrong:\n{}".format(ex))
 
-    print(Cronometro.verifica())
+    #print(Cronometro.verifica())
 
     print(mia_cassetta)
-
-    """
-
-
-    """
+    # mia_cassetta.esporta(get_output("output.wav"))
+    # quit()
+    
     # print("{0}\n----------------------------------\n{1} Bytes\n\n"
     #       .format(mia_cassetta.cassetta[0].dati, len(mia_cassetta.cassetta[0])))
 
     # print(mia_cassetta.cassetta[1].dati) # 0x9000,0xd1a3, 0xd000
 
-    mia_cassetta.cassetta[0].titolo = "game1"
-    # mia_cassetta.cassetta[0].esporta_file(get_output())
+    mia_cassetta._cassetta[1].titolo = "game1"
+    mia_cassetta._cassetta[1].esporta_file(os.path.join(os.getcwd(), "output"))
 
-    # mia_cassetta.cassetta[1].titolo = "game2"
-    # mia_cassetta.cassetta[1].esporta_file(os.path.join(os.getcwd(), "export"))
+    mia_cassetta._cassetta[2].titolo = "game2"
+    mia_cassetta._cassetta[2].esporta_file(os.path.join(os.getcwd(), "output"))
 
-    mia_cassetta.esporta(get_output("output.wav"))
+    # mia_cassetta.esporta(get_output("output.wav"))
 
     print(Cronometro.verifica())
-    """
+    
 
     # ui = Ui()
     # ui.cmdloop()
-
+    
     Cronometro.reset()
 
-    cas = msx.Cassetta()
+    # cas = msx.Cassetta()
     # cas.load(os.getcwd() + "/tapes/guttblaster.cas")
-    cas.importa_rom(os.getcwd() + "/roms/block_hole.rom")
-    print(cas)
-    print(str(cas._cassetta[0].dati))
-    print(str(len(cas._cassetta[0].dati)))
+    # cas.importa_rom(os.getcwd() + "/roms/block_hole.rom")
+    # print(cas)
+    # print(str(cas._cassetta[0].dati))
+    # print(str(len(cas._cassetta[0].dati)))
     # print(str(cas._cassetta[1].esporta_file (get_output())))
     # print(str(cas.cassetta[2].dati))
     # print(str(cas.cassetta[136].dati))
-    cas.esporta(get_output("output.wav"))
+    # cas.esporta(get_output("output.wav"))
     # esporta("output.wav")
 
-    print(Cronometro.verifica())
+    # print(Cronometro.verifica())

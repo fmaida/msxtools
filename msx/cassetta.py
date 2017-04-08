@@ -87,7 +87,7 @@ class Cassetta:
 
         blocco_loader = FileAscii()
         blocco_loader.titolo = os.path.splitext(os.path.basename(p_nome_file))[0]
-        blocco_loader.dati = b'1 POKE&HFBB0,1:POKE&HFBB1,1:KEYOFF:SCREEN0:WIDTH 40:COLOR15,8,8\r\n3 LOCATE12,9:PRINT" NOW LOADING "\r\n4 LOCATE14,12:PRINT"PLEASE WAIT"\r\n5 LOCATE8,18:PRINT"Copyright 2016 Kaiko"\r\n6 BLOAD"cas:",R\r\n7 GOTO 6\r\n\x1a\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+        blocco_loader.dati = b'1 POKE&HFBB0,1:POKE&HFBB1,1:KEYOFF:SCREEN0:WIDTH 40:COLOR15,8,8\r\n3 LOCATE12,9:PRINT" NOW LOADING "\r\n4 LOCATE14,12:PRINT"PLEASE WAIT"\r\n5 LOCATE6,18:PRINT"Loader made in 2017 by Kaiko"\r\n6 BLOAD"cas:",R\r\n7 GOTO 6\r\n\x1a\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 
         self.aggiungi(blocco_loader)
 
@@ -110,6 +110,10 @@ class Cassetta:
         elif len(buffer) <= 32768:
             programma.append(buffer[:16384])
             programma.append(buffer[16384:])
+        elif len(buffer) <= 49152:
+            programma.append(buffer[:16384])
+            programma.append(buffer[16384:32768])
+            programma.append(buffer[32768:])
         else:
             # Non supportato
             pass
@@ -123,8 +127,10 @@ class Cassetta:
             else:
                 if indice == 0:
                     a = Loader.binari_32k_4000h
-                else:
+                elif indice == 1:
                     a = Loader.binari_32k_8000h
+                elif indice == 2:
+                    a = b"" # Loader.binari_48k_C000h
 
             blocco.importa_rom(elemento, a)
 

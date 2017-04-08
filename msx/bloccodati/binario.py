@@ -36,9 +36,12 @@ class FileBinario(BloccoDati):
     def importa_rom(self, p_buffer: bytearray, p_loader: bytearray):
         # Legge l'indirizzo di esecuzione
 
-        self.indirizzo_iniziale = Indirizzo(0x9000)  # 0xA000  # int("A000", 16)
+        self.indirizzo_iniziale = Indirizzo(0xC000)  # 0xA000  # int("A000", 16)
         self.indirizzo_finale = Indirizzo(self.indirizzo_iniziale.valore + (len(p_buffer) + len(p_loader) - 1))  # 0xD038
-        self.indirizzo_esecuzione = Indirizzo(self.indirizzo_iniziale.valore + len(p_buffer))  # 0xD000
+        if p_loader != b"":
+            self.indirizzo_esecuzione = Indirizzo(self.indirizzo_iniziale.valore + len(p_buffer))  # 0xD000
+        else:
+            self.indirizzo_esecuzione = Indirizzo(0x4010)
 
         temp = p_buffer + p_loader
 
