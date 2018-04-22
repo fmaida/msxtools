@@ -1,9 +1,9 @@
-from .generico import BloccoDati
+from .generic import GenericDataBlock
 from ..intestazioni import Intestazioni
 from ..wav import Esportazione
 
 
-class FileAscii(BloccoDati):
+class AsciiFile(GenericDataBlock):
 
     intestazione = b"\xea" * 10
 

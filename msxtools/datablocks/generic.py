@@ -3,7 +3,7 @@ from ..tipi import TipiDiBlocco
 from ..wav import Esportazione
 
 
-class BloccoDati:
+class GenericDataBlock:
     """
     Questa classe gestisce la struttura di un blocco delle cassette MSX.
     Un blocco può contenere un file di tipo ASCII, Binario, Basic o custom.
@@ -80,11 +80,11 @@ class BloccoDati:
         """
 
         tipo = self.__class__.__name__
-        if tipo == "FileAscii":
+        if tipo == "AsciiFile":
             tipo = "ASCII"
-        elif tipo == "FileBasic":
+        elif tipo == "BasicFile":
             tipo = "Basic"
-        elif tipo == "FileBinario":
+        elif tipo == "BinaryFile":
             tipo = "Binary"
         else:
             tipo = "Custom"

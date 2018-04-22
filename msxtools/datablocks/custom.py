@@ -1,11 +1,11 @@
 import os
 
-from .generico import BloccoDati
+from .generic import GenericDataBlock
 from ..intestazioni import Intestazioni
 from ..wav import Esportazione
 
 
-class FileCustom(BloccoDati):
+class CustomFile(GenericDataBlock):
 
     # --=-=--------------------------------------------------------------------------=-=--
 

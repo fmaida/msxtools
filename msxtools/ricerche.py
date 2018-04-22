@@ -1,5 +1,5 @@
 from .intestazioni import Intestazioni
-from .bloccodati import FileAscii, FileBasic, FileBinario, FileCustom
+from .datablocks import AsciiFile, BasicFile, BinaryFile, CustomFile
 
 
 class Ricerca:
@@ -42,7 +42,7 @@ class Ricerca:
             blocco = self.verifica_tipo_blocco()
 
             # Cerca il titolo del file (6 caratteri)
-            if blocco.tipo is not FileCustom:
+            if blocco.tipo is not CustomFile:
                 inizio_titolo = Intestazioni.lunghezza_intestazione \
                                 + Intestazioni.lunghezza_blocco_tipo
                 blocco.titolo = self.buffer[inizio_titolo:inizio_titolo + 6].decode("ascii")
@@ -50,7 +50,7 @@ class Ricerca:
                 blocco._titolo = ""
 
             # Cerca di individuare l'inizio e la fine della parte dati
-            if blocco.tipo is not FileCustom:
+            if blocco.tipo is not CustomFile:
                 inizio_dati = self.buffer.find(Intestazioni.blocco_intestazione, Intestazioni.lunghezza_intestazione) \
                               + Intestazioni.lunghezza_intestazione
             else:
@@ -74,7 +74,7 @@ class Ricerca:
 
         else:
             # No. Non ha un'intestazione... allora è per forza un blocco custom
-            blocco = FileCustom()
+            blocco = CustomFile()
             blocco.dati = self.buffer
 
             # Elimina dal buffer tutto quello che ha analizzato finora
@@ -84,7 +84,7 @@ class Ricerca:
         # Ora, prima di restituire il blocco controlla che il blocco che ha
         # appena rilevato è di tipo ASCII e se il blocco finisce con un carattere
         # di EOF
-        if blocco.tipo is FileAscii:
+        if blocco.tipo is AsciiFile:
             # print(blocco.dati)
             contiene_eof = blocco.dati.find(b"\x1a") >= 0
             while not contiene_eof:
@@ -99,9 +99,6 @@ class Ricerca:
         """
         Verifica se un una stringa contenente bytes inizia con un blocco di
         intestazione MSX
-
-        Args:
-            p_dati: stringa di bytes da analizzare
 
         Returns:
             True se la stringa di bytes inizia con l'intestazione ricercata,
@@ -122,14 +119,14 @@ class Ricerca:
         # Cerca il tipo del file
         tipo_blocco = self.buffer[inizio:inizio + 10]
 
-        if tipo_blocco == FileAscii.intestazione:
-            return FileAscii()
-        elif tipo_blocco == FileBasic.intestazione:
-            return FileBasic()
-        elif tipo_blocco == FileBinario.intestazione:
-            return FileBinario()
+        if tipo_blocco == AsciiFile.intestazione:
+            return AsciiFile()
+        elif tipo_blocco == BasicFile.intestazione:
+            return BasicFile()
+        elif tipo_blocco == BinaryFile.intestazione:
+            return BinaryFile()
         else:
-            return FileCustom()
+            return CustomFile()
 
     # --=-=--------------------------------------------------------------------------=-=--
 

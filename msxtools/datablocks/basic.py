@@ -1,9 +1,9 @@
-from .generico import BloccoDati
+from .generic import GenericDataBlock
 from ..intestazioni import Intestazioni
 from ..wav import Esportazione
 
 
-class FileBasic(BloccoDati):
+class BasicFile(GenericDataBlock):
 
     intestazione = b"\xd3" * 10  # chr(int(0xD3)) * 10
 

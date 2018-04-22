@@ -1,12 +1,12 @@
 import os
 
-from .generico import BloccoDati
+from .generic import GenericDataBlock
 from ..intestazioni import Intestazioni
 from ..wav import Esportazione
 from ..strumenti import Indirizzo
 
 
-class FileBinario(BloccoDati):
+class BinaryFile(GenericDataBlock):
     intestazione = b"\xd0" * 10  # chr(int(0xD0)) * 10
 
     # --=-=--------------------------------------------------------------------------=-=--
