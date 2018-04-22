@@ -1,4 +1,4 @@
-# MSX Tape Tools
+# MSX Tools
 
-MSX Tape Tools - Un programma per gestire i file in formato .CAS
-e trasformarli in file WAV per poter essere utilizzati su di un computer MSX vero.
+Tools that allows to read virtual tape files for the old MSX format (.cas),
+manage them and convert them back into an audio file that can be used with the real hardware.
