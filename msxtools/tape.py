@@ -1,6 +1,6 @@
 import os
 
-from .intestazioni import Intestazioni
+# from .intestazioni import Intestazioni
 from .bloccodati import FileBinario, FileAscii
 from .loader import Loader
 from .eccezioni import Eccezione
@@ -8,7 +8,7 @@ from .ricerche import Ricerca
 from .wav import Esportazione
 
 
-class Cassetta:
+class Tape:
     """
     _-=-_-=-_ _-=-_-=-_ _-=-_-=-_ _-=-_-=-_ _-=-_-=-_ _-=-_-=-_ _-=-_-=-_ _-=-_-=-_
     MSX TAPE class - Reads and writes on a virtual tape file (.CAS)
@@ -18,7 +18,7 @@ class Cassetta:
 
     # --=-=--------------------------------------------------------------------------=-=--
 
-    def __init__(self):
+    def __init__(self, p_file: str = None):
         """
         Costruttore della classe
 
@@ -32,6 +32,13 @@ class Cassetta:
         self.indice = -1
         self.posizione = -1
         self._ricerca = Ricerca()
+
+        if p_file:
+            if p_file.lower().endswith('.rom') or \
+               p_file.lower().endswith('.mx1'):
+                self.importa_rom(p_file)
+            else:
+                self.load(p_file)
 
     # --=-=--------------------------------------------------------------------------=-=--
 
@@ -194,7 +201,7 @@ class Cassetta:
 
     # --=-=--------------------------------------------------------------------------=-=--
 
-    def esporta(self, p_nome_file="output.wav", p_numero_file=-1):
+    def export_to_wav(self, p_nome_file="output.wav", p_numero_file=-1):
         """
         Test
 
@@ -252,5 +259,18 @@ class Cassetta:
 
     # --=-=--------------------------------------------------------------------------=-=--
 
+    def __repr__(self):
+        return str(self)
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
     def __len__(self):
+        """
+        Returns the length of a tape expressed in number of files
+
+        Returns:
+            integer
+        """
         return len(self._cassetta)
+
+    # --=-=--------------------------------------------------------------------------=-=--

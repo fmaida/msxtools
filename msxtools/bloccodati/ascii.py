@@ -46,8 +46,3 @@ class FileAscii(BloccoDati):
                 continua = False
             ind += 1
             conto += 1
-
-        # print("\"{0}\"\n--------------------------------".format(temp))
-        # print("{0} Bytes".format(len(temp) - len("[FINE]")))
-        print(temp)
-        print(len(temp))
