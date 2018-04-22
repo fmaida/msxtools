@@ -15,6 +15,15 @@ class MSXTests(unittest.TestCase):
 
         return cas
 
+    @staticmethod
+    def convert_rom(p_file):
+        filename = os.path.join(os.getcwd(), "tests", "assets", "roms", p_file)
+        cas = msxtools.Tape(filename)
+        print(cas)
+        # cas.export_to_wav()
+
+        return cas
+
     def test_barnstormer(self):
         cas = self.convert("barnstormer.cas")
         self.assertEqual(len(cas), 2)
@@ -92,3 +101,15 @@ class MSXTests(unittest.TestCase):
         cas = self.convert("xyzolog.cas")
         self.assertIn("Binary", str(cas[0]))
         self.assertEqual(len(cas), 1)
+
+    def test_athletic_land(self):
+        cas = self.convert_rom("athletic_land.rom")
+        self.assertIn("ASCII", str(cas[0]))
+        self.assertIn("Binary", str(cas[1]))
+        self.assertEqual(len(cas), 2)
+
+    def test_road_fighter(self):
+        cas = self.convert_rom("road_fighter.mx1")
+        self.assertIn("ASCII", str(cas[0]))
+        self.assertIn("Binary", str(cas[1]))
+        self.assertEqual(len(cas), 2)
