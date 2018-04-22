@@ -56,10 +56,6 @@ docs/_build/
 # PyBuilder
 target/
 
-# Roba da escludere nella cartella .idea
-.idea/workspace.xml
-.idea/tasks.xml
-
 # Roba specifica del mio progetto
 # che viene generata a livello di runtime
 .DS_Store
