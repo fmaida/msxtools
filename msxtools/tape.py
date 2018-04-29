@@ -202,26 +202,27 @@ class Tape:
 
     # --=-=--------------------------------------------------------------------------=-=--
 
-    def export_to_wav(self, p_nome_file="output.wav", p_numero_file=-1):
+    def export_to_wav(self, p_file="output.wav", p_file_index=-1):
         """
         Test
 
         Args:
-            p_nome_file:   Percorso e nome del file WAV da creare
-            p_numero_file: Se indicato esporta solo il numero di file selezionato
+            p_file:       Percorso e nome del file WAV da creare
+            p_file_index: Se indicato esporta solo il numero di file
+                          selezionato
 
         Returns:
             None
         """
 
-        suono = Esportazione(p_nome_file)
-        if p_numero_file < 0:
+        suono = Esportazione(p_file)
+        if p_file_index < 0:
             for ind, blocco in enumerate(self._cassetta):
                 blocco.esporta(suono)
                 if ind < (len(self._cassetta) - 1):
                     suono.inserisci_silenzio(4000)
         else:
-            self._cassetta[p_numero_file].esporta(suono)
+            self._cassetta[p_file_index].esporta(suono)
         suono.chiudi()
 
     # --=-=--------------------------------------------------------------------------=-=--
