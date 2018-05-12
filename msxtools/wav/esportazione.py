@@ -11,9 +11,9 @@ import wave
 
 class Esportazione:
 
-    max_buffer = 16384  # 16Kb
+    max_buffer = 32768  # 32Kb
 
-    def __init__(self, p_file_output="output.wav"):
+    def __init__(self, p_file_output="output.wav", p_bitrate:int = -1):
         """
         Costruttore della classe
 
@@ -36,7 +36,12 @@ class Esportazione:
         # volta in tempo reale ci impiegherebbe un sacco di tempo, mentre se invece faccio
         # così, creo degli array in memoria e poi dico al programma di scrivere il
         # contenuto degli array su disco ci mette MOLTO MENO!
-        Parametri.ricalcola_onde()
+        if p_bitrate != Parametri.bitrate:
+            if p_bitrate <= 0:
+                p_bitrate = Parametri.bitrate
+            else:
+                Parametri.bitrate = p_bitrate
+            Parametri.ricalcola_onde()
 
         # Apre il file wav sul disco e si prepara a scriverci dentro
         self.file_audio = wave.open(p_file_output, "w")

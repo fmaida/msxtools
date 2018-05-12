@@ -11,7 +11,7 @@ class MSXImportTests(unittest.TestCase):
         filename = os.path.join(os.getcwd(), "tests", "assets", "tapes", p_file)
         cas = msxtools.Tape(filename)
         print(cas)
-        # cas.export_to_wav(os.path.join(os.path.dirname(__file__), "output", "output.wav"))
+        cas.export_to_wav(os.path.join(os.path.dirname(__file__), "output", "output.wav"))
 
         return cas
 
