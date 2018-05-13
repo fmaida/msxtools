@@ -70,14 +70,14 @@ class Tape:
                 blocco = self._ricerca.ricerca_blocco()
 
                 # Aggiunge il blocco che ha trovato alla cassetta
-                self._cassetta.append(blocco)
+                self.add(blocco)
 
         except:
             raise Eccezione("Unable to find any tape called \"{0}\"".format(p_file))
 
     # --=-=--------------------------------------------------------------------------=-=--
 
-    def aggiungi(self, p_blocco):
+    def add(self, p_blocco):
         """
         Aggiunge un nuovo blocco-dati alla cassetta
 
@@ -97,7 +97,7 @@ class Tape:
         blocco_loader.titolo = os.path.splitext(os.path.basename(p_nome_file))[0]
         blocco_loader.dati = b'1 POKE&HFBB0,1:POKE&HFBB1,1:KEYOFF:SCREEN0:WIDTH 40:COLOR15,8,8\r\n3 LOCATE12,9:PRINT" NOW LOADING "\r\n4 LOCATE14,12:PRINT"PLEASE WAIT"\r\n5 LOCATE6,18:PRINT"Loader made in 2017 by Kaiko"\r\n6 BLOAD"cas:",R\r\n7 GOTO 6\r\n\x1a\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 
-        self.aggiungi(blocco_loader)
+        self.add(blocco_loader)
 
         # Legge il file .ROM dal disco
         f = open(p_nome_file, "rb")
@@ -142,7 +142,7 @@ class Tape:
 
             blocco.importa_rom(elemento, a)
 
-            self.aggiungi(blocco)
+            self.add(blocco)
 
         """
         a = len(Loader.binari_32k_4000h)
@@ -180,7 +180,7 @@ class Tape:
         blocco.titolo = p_titolo
         blocco.dati = p_dati
 
-        self.aggiungi(blocco)
+        self.add(blocco)
 
     # --=-=--------------------------------------------------------------------------=-=--
 
@@ -249,12 +249,19 @@ class Tape:
 
         temp = ""
         if len(self._cassetta) > 0:
-            temp += "TAPE CONTENT:\n"
+            # temp += "TAPE CONTENT:\n"
             temp += "-" * 39 + "\n"
             for indice, elemento in enumerate(self._cassetta):
-                temp += "{0}) {1}\n".format(str(indice + 1).rjust(2), str(elemento))
+                temp += "{0}. {1}\n".format(str(indice + 1).rjust(2), str(elemento))
             temp += "-" * 39 + "\n"
-            temp += "{0} Files found\n".format(str(len(self._cassetta))).rjust(40)
+
+            if len(self._cassetta) > 1:
+                total = "{0} Files found\n"
+            else:
+                total = "{0} File found\n"
+
+            temp += total.format(str(len(self._cassetta))).rjust(40)
+
             return temp
         else:
             raise Eccezione("Tape is currently empty")

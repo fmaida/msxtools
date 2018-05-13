@@ -9,6 +9,12 @@ class BasicFile(GenericDataBlock):
 
     # --=-=--------------------------------------------------------------------------=-=--
 
+    @property
+    def type(self):
+        return "basic"
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
     def esporta(self, p_file: Esportazione):
 
         p_file.inserisci_sincronismo(2500)  # Tre secondi

@@ -7,6 +7,10 @@ from ..wav import Esportazione
 
 class CustomFile(GenericDataBlock):
 
+    @property
+    def type(self):
+        return "custom"
+
     # --=-=--------------------------------------------------------------------------=-=--
 
     def esporta(self, p_file: Esportazione):

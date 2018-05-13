@@ -14,8 +14,26 @@ class GenericDataBlock:
     # --=-=--------------------------------------------------------------------------=-=--
 
     @property
-    def tipo(self):
+    def type(self):
         return self.__class__
+
+    @property
+    def title(self):
+        return self._titolo
+
+    @title.setter
+    def title(self, titolo):
+        if len(titolo) > 6:
+            titolo = titolo[0:6]
+        self._titolo = titolo.ljust(6, " ")
+
+    @property
+    def dati(self):
+        return self._dati
+
+    @dati.setter
+    def dati(self, p_valore):
+        self._dati = p_valore
 
     # --=-=--------------------------------------------------------------------------=-=--
 
@@ -27,31 +45,9 @@ class GenericDataBlock:
             None
         """
         self._titolo = ""
-        self.titolo = p_titolo  # Titolo del file
+        self.title = p_titolo  # Titolo del file
         self._dati = b""
         self.dati = p_dati  # Dati che compongono il file memorizzato
-
-    # --=-=--------------------------------------------------------------------------=-=--
-
-    @property
-    def titolo(self):
-        return self._titolo
-
-    @titolo.setter
-    def titolo(self, titolo):
-        if len(titolo) > 6:
-            titolo = titolo[0:6]
-        self._titolo = titolo.ljust(6, " ")
-
-    # --=-=--------------------------------------------------------------------------=-=--
-
-    @property
-    def dati(self):
-        return self._dati
-
-    @dati.setter
-    def dati(self, p_valore):
-        self._dati = p_valore
 
     # --=-=--------------------------------------------------------------------------=-=--
 
@@ -89,7 +85,7 @@ class GenericDataBlock:
         else:
             tipo = "Custom"
 
-        if self.titolo != "":
+        if self.title != "":
             temp = "\"{0}\" ({1})  [ {2} Bytes ] ".format(self.titolo, tipo.ljust(6), str(len(self.dati)).rjust(6))
         else:
             temp = "{0} ({1})  [ {2} Bytes ]".format(8 * " ", tipo.ljust(6), str(len(self.dati)).rjust(6))

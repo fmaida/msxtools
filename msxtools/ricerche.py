@@ -1,5 +1,5 @@
 from .intestazioni import Intestazioni
-from .datablocks import AsciiFile, BasicFile, BinaryFile, CustomFile
+from .datablocks import AsciiFile, BasicFile, BinaryFile, CustomFile, GenericDataBlock
 
 
 class Ricerca:
@@ -25,7 +25,7 @@ class Ricerca:
 
     # --=-=--------------------------------------------------------------------------=-=--
 
-    def ricerca_blocco(self):
+    def ricerca_blocco(self) -> GenericDataBlock:
         """
         Ricerca il primo blocco dati che trova a partire dai dati grezzi
 
@@ -42,7 +42,7 @@ class Ricerca:
             blocco = self.verifica_tipo_blocco()
 
             # Cerca il titolo del file (6 caratteri)
-            if blocco.tipo is not CustomFile:
+            if blocco.type != "custom":
                 inizio_titolo = Intestazioni.lunghezza_intestazione \
                                 + Intestazioni.lunghezza_blocco_tipo
                 blocco.titolo = self.buffer[inizio_titolo:inizio_titolo + 6].decode("ascii")
@@ -50,7 +50,7 @@ class Ricerca:
                 blocco._titolo = ""
 
             # Cerca di individuare l'inizio e la fine della parte dati
-            if blocco.tipo is not CustomFile:
+            if blocco.type != "custom":
                 inizio_dati = self.buffer.find(Intestazioni.blocco_intestazione, Intestazioni.lunghezza_intestazione) \
                               + Intestazioni.lunghezza_intestazione
             else:
@@ -84,13 +84,15 @@ class Ricerca:
         # Ora, prima di restituire il blocco controlla che il blocco che ha
         # appena rilevato è di tipo ASCII e se il blocco finisce con un carattere
         # di EOF
-        if blocco.tipo is AsciiFile:
+        if blocco.type == "ascii":
             # print(blocco.dati)
-            contiene_eof = blocco.dati.find(b"\x1a") >= 0
-            while not contiene_eof:
+            # contiene_eof = blocco.dati.find(b"\x1a") >= 0
+            # while not contiene_eof:
+            while b"\x1a" not in blocco.dati:
                 altro_blocco = self.ricerca_blocco()
                 blocco += altro_blocco
-                contiene_eof = altro_blocco.dati.find(b"\x1a") >= 0
+                # contiene_eof = altro_blocco.dati.find(b"\x1a") >= 0
+
         return blocco
 
     # --=-=--------------------------------------------------------------------------=-=--

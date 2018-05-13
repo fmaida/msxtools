@@ -63,3 +63,4 @@ target/
 *.wav
 export/
 output/
+.pytest_cache

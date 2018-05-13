@@ -7,7 +7,14 @@ from ..strumenti import Indirizzo
 
 
 class BinaryFile(GenericDataBlock):
+
     intestazione = b"\xd0" * 10  # chr(int(0xD0)) * 10
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
+    @property
+    def type(self):
+        return "binary"
 
     # --=-=--------------------------------------------------------------------------=-=--
 
