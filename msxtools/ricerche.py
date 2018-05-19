@@ -45,9 +45,9 @@ class Ricerca:
             if blocco.type != "custom":
                 inizio_titolo = Intestazioni.lunghezza_intestazione \
                                 + Intestazioni.lunghezza_blocco_tipo
-                blocco.titolo = self.buffer[inizio_titolo:inizio_titolo + 6].decode("ascii")
+                blocco.title = self.buffer[inizio_titolo:inizio_titolo + 6].decode("ascii")
             else:
-                blocco._titolo = ""
+                blocco.title = ""
 
             # Cerca di individuare l'inizio e la fine della parte dati
             if blocco.type != "custom":

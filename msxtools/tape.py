@@ -94,7 +94,7 @@ class Tape:
     def importa_rom(self, p_nome_file):
 
         blocco_loader = AsciiFile()
-        blocco_loader.titolo = os.path.splitext(os.path.basename(p_nome_file))[0]
+        blocco_loader.title = os.path.splitext(os.path.basename(p_nome_file))[0]
         blocco_loader.dati = b'1 POKE&HFBB0,1:POKE&HFBB1,1:KEYOFF:SCREEN0:WIDTH 40:COLOR15,8,8\r\n3 LOCATE12,9:PRINT" NOW LOADING "\r\n4 LOCATE14,12:PRINT"PLEASE WAIT"\r\n5 LOCATE6,18:PRINT"Loader made in 2017 by Kaiko"\r\n6 BLOAD"cas:",R\r\n7 GOTO 6\r\n\x1a\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 
         self.add(blocco_loader)
@@ -128,7 +128,7 @@ class Tape:
 
         for indice, elemento in enumerate(programma):
             blocco = BinaryFile()
-            blocco.titolo = "DATA" + str(indice + 1)  # os.path.splitext(os.path.basename(p_nome_file))[0]
+            blocco.title = "DATA" + str(indice + 1)  # os.path.splitext(os.path.basename(p_nome_file))[0]
 
             if len(programma) == 1:
                 a = Loader.binari_16k_4000h
@@ -154,7 +154,7 @@ class Tape:
 
             blocco = BinaryFile()
 
-            blocco.titolo = os.path.splitext(os.path.basename(p_nome_file))[0]
+            blocco.title = os.path.splitext(os.path.basename(p_nome_file))[0]
 
             a = buffer[ind:ind + 16384]
             b = len(a)
@@ -177,7 +177,7 @@ class Tape:
     def importa_ascii(self, p_titolo, p_dati):
 
         blocco = AsciiFile()
-        blocco.titolo = p_titolo
+        blocco.title = p_titolo
         blocco.dati = p_dati
 
         self.add(blocco)
@@ -250,17 +250,17 @@ class Tape:
         temp = ""
         if len(self._cassetta) > 0:
             # temp += "TAPE CONTENT:\n"
-            temp += "-" * 39 + "\n"
+            temp += "-" * 42 + "\n"
             for indice, elemento in enumerate(self._cassetta):
                 temp += "{0}. {1}\n".format(str(indice + 1).rjust(2), str(elemento))
-            temp += "-" * 39 + "\n"
+            temp += "-" * 42 + "\n"
 
             if len(self._cassetta) > 1:
                 total = "{0} Files found\n"
             else:
                 total = "{0} File found\n"
 
-            temp += total.format(str(len(self._cassetta))).rjust(40)
+            temp += total.format(str(len(self._cassetta))).rjust(42)
 
             return temp
         else:

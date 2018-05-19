@@ -117,12 +117,16 @@ def test_xyzolog():
 def test_athletic_land():
     cas = convert_rom("athletic_land.rom")
     assert cas[0].type == "ascii"
+    assert len(cas[0].title) == 6
     assert cas[1].type == "binary"
+    assert len(cas[1].title) == 6
     assert len(cas) == 2
 
 
 def test_road_fighter():
     cas = convert_rom("road_fighter.mx1")
     assert cas[0].type == "ascii"
+    assert len(cas[0].title) == 6
     assert cas[1].type == "binary"
+    assert len(cas[1].title) == 6
     assert len(cas) == 2

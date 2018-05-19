@@ -63,13 +63,13 @@ class BinaryFile(GenericDataBlock):
         f.close()
 
         # Cambia il titolo prendendolo dal nome del file
-        self.titolo = os.path.splitext(os.path.basename(p_file))[0]
+        self.title = os.path.splitext(os.path.basename(p_file))[0]
 
         indirizzo_iniziale = Indirizzo(0x9000)  # 0xA000  # int("A000", 16)
         indirizzo_esecuzione = indirizzo_iniziale + len(buffer)  # C000
 
         temp = Intestazioni.blocco_intestazione + FileBinario.intestazione + \
-               self.titolo.encode("ascii") + Intestazioni.blocco_intestazione
+               self.title.encode("ascii") + Intestazioni.blocco_intestazione
 
         # Indirizzo di partenza
 
@@ -115,7 +115,7 @@ class BinaryFile(GenericDataBlock):
     # --=-=--------------------------------------------------------------------------=-=--
 
     def esporta_file(self, p_percorso):
-        file_esportato = os.path.join(p_percorso, self.titolo.strip() + ".bin")
+        file_esportato = os.path.join(p_percorso, self.title.strip() + ".bin")
 
         # Apre il file sul disco
         f = open(file_esportato, "wb")
@@ -139,7 +139,7 @@ class BinaryFile(GenericDataBlock):
 
         p_file.inserisci_sincronismo(2500)  # Tre secondi
 
-        intestazione = self.intestazione + self.titolo.encode("ascii")
+        intestazione = self.intestazione + self.title.encode("ascii")
 
         p_file.inserisci_stringa(intestazione)
 

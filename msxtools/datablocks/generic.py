@@ -15,7 +15,7 @@ class GenericDataBlock:
 
     @property
     def type(self):
-        return self.__class__
+        return "generic"
 
     @property
     def title(self):
@@ -85,10 +85,14 @@ class GenericDataBlock:
         else:
             tipo = "Custom"
 
-        if self.title != "":
-            temp = "\"{0}\" ({1})  [ {2} Bytes ] ".format(self.titolo, tipo.ljust(6), str(len(self.dati)).rjust(6))
+        file_length = "{:,}".format(len(self.dati))
+
+        if tipo != "Custom":
+            temp = "\"{0}\" ( {1} )  [ {2} Bytes ] ".format(self.title,
+                                                            self.type.capitalize().ljust(6),
+                                                            file_length.rjust(7))
         else:
-            temp = "{0} ({1})  [ {2} Bytes ]".format(8 * " ", tipo.ljust(6), str(len(self.dati)).rjust(6))
+            temp = "( Data Block )".ljust(21) + "[ {} Bytes ]".format(file_length.rjust(7))
         return temp
 
     # --=-=--------------------------------------------------------------------------=-=--

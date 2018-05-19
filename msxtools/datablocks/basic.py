@@ -19,7 +19,7 @@ class BasicFile(GenericDataBlock):
 
         p_file.inserisci_sincronismo(2500)  # Tre secondi
 
-        intestazione = self.intestazione + self.titolo.encode("ascii")
+        intestazione = self.intestazione + self.title.encode("ascii")
 
         p_file.inserisci_stringa(intestazione)
 
