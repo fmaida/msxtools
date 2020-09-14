@@ -39,16 +39,22 @@ class AsciiFile(GenericDataBlock):
                 p_file.inserisci_byte(b)
                 temp += a
                 if conto > 255:
+                    #if a == b"\n":
+                        #print("-----------------------------")
+                        #print(temp)
+                        #print("=============================")
+                        #temp = b""
                     p_file.inserisci_silenzio(500)
                     p_file.inserisci_sincronismo(1000)
                     conto = 0
             else:
                 # p_file.inserisci_byte(26)
                 # temp += "[FINE]"
-                while conto < 255:
-                    p_file.inserisci_byte(26)  # EOF
-                    temp += b"\x1a"
-                    conto += 1
+                if conto > 0:
+                    while conto < 255:
+                        p_file.inserisci_byte(26)  # EOF
+                        temp += b"\x1a"
+                        conto += 1
                 continua = False
             ind += 1
             conto += 1
