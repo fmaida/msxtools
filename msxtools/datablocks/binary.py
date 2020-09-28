@@ -40,15 +40,17 @@ class BinaryFile(GenericDataBlock):
 
     # --=-=--------------------------------------------------------------------------=-=--
 
-    def importa_rom(self, p_buffer: bytearray, p_loader: bytearray):
+    def importa_rom(self, p_buffer: bytearray, p_loader: bytearray,
+                    indirizzo_inizio, indirizzo_esecuzione):
         # Legge l'indirizzo di esecuzione
 
-        self.indirizzo_iniziale = Indirizzo(0xC000)  # 0xA000  # int("A000", 16)
+
+        self.indirizzo_iniziale = indirizzo_inizio  # Indirizzo(0xC000)  # 0xA000  # int("A000", 16)
         self.indirizzo_finale = Indirizzo(self.indirizzo_iniziale.valore + (len(p_buffer) + len(p_loader) - 1))  # 0xD038
         if p_loader != b"":
-            self.indirizzo_esecuzione = Indirizzo(self.indirizzo_iniziale.valore + len(p_buffer))  # 0xD000
+            self.indirizzo_esecuzione = indirizzo_esecuzione  # self.indirizzo_iniziale.valore + len(p_buffer))  # 0xD000
         else:
-            self.indirizzo_esecuzione = Indirizzo(0x4010)
+            self.indirizzo_esecuzione = Indirizzo(self.indirizzo_finale.valore - len(p_loader) + 10)  # Indirizzo(0x4010)
 
         temp = p_buffer + p_loader
 

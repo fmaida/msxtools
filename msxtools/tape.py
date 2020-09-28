@@ -6,6 +6,7 @@ from .loader import Loader
 from .eccezioni import Eccezione
 from .ricerche import Ricerca
 from .wav import Esportazione
+from .strumenti import Indirizzo
 
 
 class Tape:
@@ -93,9 +94,27 @@ class Tape:
 
     def importa_rom(self, p_nome_file):
 
+        title = [
+            b"CHAMPION BILLIARDS",
+            b"NOW LOADING - PLEASE WAIT",
+            b"(C) 1986 SEGA, (C) 2016-20 MASTROPIERO",
+        ]
+        cols = [
+            str(int(37/2 - len(title[0])/2)).encode("ascii"),
+            str(int(37/2 - len(title[1])/2)).encode("ascii"),
+            str(int(37/2 - len(title[2])/2)).encode("ascii"),
+        ]
+
         blocco_loader = AsciiFile()
         blocco_loader.title = os.path.splitext(os.path.basename(p_nome_file))[0]
-        blocco_loader.dati = b'1 POKE&HFBB0,1:POKE&HFBB1,1:KEYOFF:SCREEN0:WIDTH 40:COLOR15,8,8\r\n3 LOCATE12,9:PRINT" NOW LOADING "\r\n4 LOCATE14,12:PRINT"PLEASE WAIT"\r\n5 LOCATE6,18:PRINT"Loader made in 2017 by Kaiko"\r\n6 BLOAD"cas:",R\r\n7 GOTO 6\r\n\x1a\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+        blocco_loader.dati  = b'1 POKE&HFBB0,1:POKE&HFBB1,1:KEYOFF:SCREEN0:WIDTH 40:COLOR15,8,8\r\n'
+        blocco_loader.dati += b'2 LOCATE' + cols[0] + b',8:PRINT"' + title[0] + b'"\r\n'
+        blocco_loader.dati += b'3 LOCATE' + cols[1] + b',9:PRINT"' + title[1] + b'"\r\n'
+        blocco_loader.dati += b'4 LOCATE' + cols[2] + b',18:PRINT"' + title[2] + b'"\r\n'
+        #blocco_loader.dati += b'5 LOCATE' + str(int(37/2 - len(title)/2)).encode("ascii") + b',18:PRINT"' + title + b'"\r\n"'
+        blocco_loader.dati += b'6 BLOAD"cas:",R\r\n7 GOTO 6\r\n\x1a'
+        while len(blocco_loader.dati) < 256:
+            blocco_loader.dati += b"\x00"
 
         self.add(blocco_loader)
 
@@ -113,11 +132,18 @@ class Tape:
         """
 
         programma = []
+        inizio = None
+        esecuzione = None
         if len(buffer) <= 16384:
             programma.append(buffer)
+            inizio = Indirizzo(0xA000)
+            esecuzione = Indirizzo(0xC000)
         elif len(buffer) <= 32768:
             programma.append(buffer[:16384])
             programma.append(buffer[16384:])
+            inizio = Indirizzo(0x9000)
+            esecuzione = Indirizzo(0xD000)
+
         elif len(buffer) <= 49152:
             programma.append(buffer[:16384])
             programma.append(buffer[16384:32768])
@@ -140,7 +166,8 @@ class Tape:
                 elif indice == 2:
                     a = b""  # Loader.binari_48k_C000h
 
-            blocco.importa_rom(elemento, a)
+            blocco.importa_rom(elemento, a,
+                               indirizzo_inizio=inizio, indirizzo_esecuzione=esecuzione)
 
             self.add(blocco)
 
