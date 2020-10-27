@@ -56,6 +56,10 @@ docs/_build/
 # PyBuilder
 target/
 
+# Virtual Environments
+# .env/**
+# .venv/**
+#
 # Roba specifica del mio progetto
 # che viene generata a livello di runtime
 .DS_Store
