@@ -1,9 +1,9 @@
 import os
 
-from .generic import GenericDataBlock
-from ..intestazioni import Intestazioni
-from ..wav import Esportazione
-from ..strumenti import Indirizzo
+from datablocks.generic import GenericDataBlock
+from datablocks.intestazioni import Intestazioni
+from datablocks.wav import Esportazione
+from datablocks.strumenti import Indirizzo
 
 
 class BinaryFile(GenericDataBlock):

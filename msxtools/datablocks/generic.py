@@ -1,6 +1,6 @@
-from ..intestazioni import Intestazioni
-from ..tipi import TipiDiBlocco
-from ..wav import Esportazione
+from datablocks.intestazioni import Intestazioni
+from datablocks.tipi import TipiDiBlocco
+from datablocks.wav import Esportazione
 
 
 class GenericDataBlock:

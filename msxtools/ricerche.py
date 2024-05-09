@@ -1,5 +1,5 @@
-from .intestazioni import Intestazioni
-from .datablocks import AsciiFile, BasicFile, BinaryFile, CustomFile, GenericDataBlock
+from datablocks.intestazioni import Intestazioni
+from datablocks import AsciiFile, BasicFile, BinaryFile, CustomFile, GenericDataBlock
 
 
 class Ricerca:

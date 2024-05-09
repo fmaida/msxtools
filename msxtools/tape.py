@@ -1,12 +1,12 @@
 import os
 
 # from .intestazioni import Intestazioni
-from .datablocks import BinaryFile, AsciiFile
-from .loader import Loader
-from .eccezioni import Eccezione
-from .ricerche import Ricerca
-from .wav import Esportazione
-from .strumenti import Indirizzo
+from datablocks import BinaryFile, AsciiFile
+from loader import Loader
+from eccezioni import Eccezione
+from ricerche import Ricerca
+from datablocks.wav import Esportazione
+from datablocks.strumenti import Indirizzo
 
 
 class Tape:
