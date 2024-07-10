@@ -1,3 +1,3 @@
-from tape import Tape
-from eccezioni import Eccezione
-from datablocks import BinaryFile
+from msxtools.tape import Tape
+from msxtools.eccezioni import Eccezione
+from msxtools.datablocks import BinaryFile

@@ -1,5 +1,5 @@
-from datablocks.intestazioni import Intestazioni
-from datablocks.wav.parametri import Parametri
+from ..intestazioni import Intestazioni
+from .parametri import Parametri
 
 import wave
 

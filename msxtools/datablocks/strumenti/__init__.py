@@ -1,1 +1,1 @@
-from datablocks.strumenti.indirizzi import Indirizzo
+from .indirizzi import Indirizzo

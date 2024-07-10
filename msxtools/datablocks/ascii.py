@@ -1,6 +1,6 @@
-from datablocks.generic import GenericDataBlock
-from datablocks.intestazioni import Intestazioni
-from datablocks.wav import Esportazione
+from .generic import GenericDataBlock
+from .intestazioni import Intestazioni
+from .wav import Esportazione
 
 
 class AsciiFile(GenericDataBlock):

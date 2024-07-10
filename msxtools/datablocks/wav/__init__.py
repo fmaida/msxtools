@@ -1,1 +1,1 @@
-from datablocks.wav.esportazione import Esportazione
+from .esportazione import Esportazione
