@@ -1,0 +1,16 @@
+{
+  "title": "Super Pac-Man",
+  "year": "2016",
+  "developer": "Namco / Mastropiero",
+  "filename": "supac",
+  "url": "https://mastropiero.itch.io/msx-super-pac",
+  "content": [
+      "This project is a dedicated port of Namco’s Super Pac-Man for the MSX system. ",
+      "While the foundation of this version is based on the Casio PV-2000 title Mr. Packn, ",
+      "this release features significant enhancements, including improved graphics and a newly ",
+      "added main title screen to provide a more polished experience."
+  ], 
+  "instructions": {
+    "loading_command": "RUN\"CAS:\""
+  }
+}

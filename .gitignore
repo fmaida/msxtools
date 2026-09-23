@@ -58,7 +58,7 @@ target/
 
 # Virtual Environments
 # .env/**
-# .venv/**
+.venv/
 #
 # Roba specifica del mio progetto
 # che viene generata a livello di runtime

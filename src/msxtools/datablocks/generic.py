@@ -11,6 +11,14 @@ class GenericDataBlock:
 
     intestazione = b""
 
+    # Nei file .CAS ogni parte del blocco è preceduta da un'intestazione (vedi
+    # Intestazioni.blocco_intestazione). Fanno eccezione i dati senza intestazione
+    # trovati all'inizio di una cassetta
+    intestazione_cas = True
+
+    # Eventuali byte che seguono tipo e nome nell'intestazione del file
+    coda_intestazione = b""
+
     # --=-=--------------------------------------------------------------------------=-=--
 
     @property
@@ -26,6 +34,14 @@ class GenericDataBlock:
         if len(titolo) > 6:
             titolo = titolo[0:6]
         self._titolo = titolo.ljust(6, " ")
+
+    def titolo_in_bytes(self) -> bytes:
+        """
+        Restituisce il titolo come lo si scrive sul nastro. Usa latin-1 in modo da
+        riscrivere identici i byte letti da una cassetta (es. caratteri giapponesi),
+        e sostituisce con "?" i caratteri che non si possono rappresentare
+        """
+        return self.title.encode("latin-1", "replace")
 
     @property
     def dati(self):
@@ -53,6 +69,18 @@ class GenericDataBlock:
 
     def esporta(self, p_file: Esportazione):
         pass
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
+    def parti_cas(self) -> list[bytes]:
+        """
+        Restituisce le parti del blocco da scrivere in un file .CAS. Ognuna verrà
+        preceduta da un'intestazione, allineata a 8 byte
+
+        Returns:
+            L'elenco delle parti, in ordine
+        """
+        raise NotImplementedError
 
     # --=-=--------------------------------------------------------------------------=-=--
 

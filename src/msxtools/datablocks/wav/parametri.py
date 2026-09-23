@@ -24,7 +24,9 @@ class Parametri:
     @staticmethod
     def modifica_bitrate(p_valore: int):
         Parametri.bitrate = p_valore
-        Parametri.frequenza = Parametri.bitrate * 12
+        # Mantiene costante il numero di campionamenti per bit, altrimenti le forme
+        # d'onda non corrisponderebbero più al bitrate richiesto
+        Parametri.frequenza = int(Parametri.bitrate * Parametri.campionamenti)
         Parametri.ricalcola_onde()
 
     # --=-=--------------------------------------------------------------------------=-=--

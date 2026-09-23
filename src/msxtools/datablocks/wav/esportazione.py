@@ -1,6 +1,7 @@
 from ..intestazioni import Intestazioni
 from .parametri import Parametri
 
+import math
 import wave
 
 
@@ -12,6 +13,14 @@ import wave
 class Esportazione:
 
     max_buffer = 32768  # 32Kb
+
+    # Silenzio fra un blocco e l'altro della cassetta, in millisecondi: dà all'MSX il
+    # tempo di elaborare il blocco appena caricato
+    pausa_tra_blocchi = 4000
+
+    # Silenzio all'inizio e alla fine del file wav, in millisecondi: se il file finisse
+    # esattamente con l'ultimo bit, gli emulatori lo considererebbero troncato
+    pausa_ai_bordi = 500
 
     def __init__(self, p_file_output="output.wav", p_bitrate:int = -1):
         """
@@ -36,11 +45,11 @@ class Esportazione:
         # volta in tempo reale ci impiegherebbe un sacco di tempo, mentre se invece faccio
         # così, creo degli array in memoria e poi dico al programma di scrivere il
         # contenuto degli array su disco ci mette MOLTO MENO!
-        if p_bitrate != Parametri.bitrate:
-            if p_bitrate <= 0:
-                p_bitrate = Parametri.bitrate
-            else:
-                Parametri.bitrate = p_bitrate
+        # Le forme d'onda vanno calcolate sempre, anche se il bitrate non cambia:
+        # alla prima esportazione gli array sono ancora vuoti
+        if 0 < p_bitrate != Parametri.bitrate:
+            Parametri.modifica_bitrate(p_bitrate)
+        else:
             Parametri.ricalcola_onde()
 
         # Apre il file wav sul disco e si prepara a scriverci dentro
@@ -152,8 +161,10 @@ class Esportazione:
         # esempio devo inserire nel file wav il silenzio
         # per 1200 (baud) x 2 (secondi) = 2400 volte.
         # Ecco da dove nasce il conto del ciclo for.
+        # Il numero di bit è arrotondato per eccesso, così il silenzio non dura
+        # mai meno di quanto richiesto (es. 500ms a 2205bps = 1103 bit, non 1102)
 
-        for ind in range(int(Parametri.bitrate * (p_durata / 1000))):
+        for ind in range(math.ceil(Parametri.bitrate * p_durata / 1000)):
             self.buffer.extend(Parametri.wave_silenzio)  # self.file_audio.writeframes(bytes(Parametri.wave_silenzio))
 
         # Se il buffer è abbastanza pieno, li scrive nel file wav

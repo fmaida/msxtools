@@ -13,6 +13,11 @@ class CustomFile(GenericDataBlock):
 
     # --=-=--------------------------------------------------------------------------=-=--
 
+    def parti_cas(self) -> list[bytes]:
+        return [self.dati]
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
     def esporta(self, p_file: Esportazione):
         p_file.inserisci_sincronismo(2500)  # Tre secondi
 

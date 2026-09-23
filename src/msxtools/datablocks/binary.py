@@ -32,7 +32,8 @@ class BinaryFile(GenericDataBlock):
 
     @dati.setter
     def dati(self, p_valore):
-        if p_valore != "":
+        # I primi 6 byte contengono gli indirizzi di inizio, fine ed esecuzione
+        if len(p_valore) >= 6:
             self.indirizzo_iniziale.importa(p_valore[0:2])
             self.indirizzo_finale.importa(p_valore[2:4])
             self.indirizzo_esecuzione.importa(p_valore[4:6])
@@ -137,11 +138,18 @@ class BinaryFile(GenericDataBlock):
 
     # --=-=--------------------------------------------------------------------------=-=--
 
+    def parti_cas(self) -> list[bytes]:
+        indirizzi = self.indirizzo_iniziale.get() + self.indirizzo_finale.get() \
+                    + self.indirizzo_esecuzione.get()
+        return [self.intestazione + self.titolo_in_bytes() + self.coda_intestazione, indirizzi + self.dati]
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
     def esporta(self, p_file: Esportazione):
 
         p_file.inserisci_sincronismo(2500)  # Tre secondi
 
-        intestazione = self.intestazione + self.title.encode("ascii")
+        intestazione = self.intestazione + self.titolo_in_bytes() + self.coda_intestazione
 
         p_file.inserisci_stringa(intestazione)
 

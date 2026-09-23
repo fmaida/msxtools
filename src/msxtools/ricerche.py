@@ -45,14 +45,27 @@ class Ricerca:
             if blocco.type != "custom":
                 inizio_titolo = Intestazioni.lunghezza_intestazione \
                                 + Intestazioni.lunghezza_blocco_tipo
-                blocco.title = self.buffer[inizio_titolo:inizio_titolo + 6].decode("ascii")
+                blocco.title = self.buffer[inizio_titolo:inizio_titolo + 6].decode("latin-1")
+
+                # L'MSX legge solo tipo e nome, ma alcuni nastri hanno altri byte
+                # nell'intestazione (letti magari da un loader personalizzato):
+                # vengono conservati per riscriverli identici
+                fine_intestazione = self.buffer.find(Intestazioni.blocco_intestazione,
+                                                     Intestazioni.lunghezza_intestazione)
+                if fine_intestazione < 0:
+                    fine_intestazione = len(self.buffer)
+                blocco.coda_intestazione = self.buffer[inizio_titolo + 6:fine_intestazione]
             else:
                 blocco.title = ""
 
             # Cerca di individuare l'inizio e la fine della parte dati
             if blocco.type != "custom":
-                inizio_dati = self.buffer.find(Intestazioni.blocco_intestazione, Intestazioni.lunghezza_intestazione) \
-                              + Intestazioni.lunghezza_intestazione
+                inizio_dati = self.buffer.find(Intestazioni.blocco_intestazione, Intestazioni.lunghezza_intestazione)
+                if inizio_dati < 0:
+                    # Cassetta troncata: c'è l'intestazione del file ma non i suoi dati
+                    inizio_dati = len(self.buffer)
+                else:
+                    inizio_dati += Intestazioni.lunghezza_intestazione
             else:
                 inizio_dati = Intestazioni.lunghezza_intestazione
 
@@ -67,19 +80,27 @@ class Ricerca:
 
             # Memorizza il blocco dati
             blocco.dati = self.buffer[inizio_dati:fine_dati]
+            if blocco.type == "ascii":
+                blocco.dati = blocco.dati[:256]
 
             # Elimina dal buffer tutto quello che ha analizzato finora
             # (Riduce il buffer togliendo tutto il blocco che ha appena scovato)
             self.buffer = self.buffer[fine_dati:]
 
         else:
-            # No. Non ha un'intestazione... allora è per forza un blocco custom
+            # No. Non ha un'intestazione... allora è per forza un blocco custom,
+            # che arriva fino alla prossima intestazione (se c'è)
+            fine_dati = self.buffer.find(Intestazioni.blocco_intestazione)
+            if fine_dati < 0:
+                fine_dati = len(self.buffer)
+
             blocco = CustomFile()
-            blocco.dati = self.buffer
+            blocco.dati = self.buffer[:fine_dati]
+            blocco.intestazione_cas = False
 
             # Elimina dal buffer tutto quello che ha analizzato finora
             # (Riduce il buffer togliendo tutto il blocco che ha appena scovato)
-            self.buffer = b""
+            self.buffer = self.buffer[fine_dati:]
 
         # Ora, prima di restituire il blocco controlla che il blocco che ha
         # appena rilevato è di tipo ASCII e se il blocco finisce con un carattere
@@ -88,8 +109,15 @@ class Ricerca:
             # print(blocco.dati)
             # contiene_eof = blocco.dati.find(b"\x1a") >= 0
             # while not contiene_eof:
-            while b"\x1a" not in blocco.dati:
+            while b"\x1a" not in blocco.dati and not self.eof():
+                # Senza EOF il file finisce comunque dove inizia un altro file
+                if self.contiene_intestazione() and self.verifica_tipo_blocco().type != "custom":
+                    break
                 altro_blocco = self.ricerca_blocco()
+                # L'MSX legge i file ASCII in segmenti da 256 byte: quello che c'è dopo
+                # (in alcuni nastri 8 byte spuri, ff 00 00 ...) non fa parte del file
+                if altro_blocco.type == "custom":
+                    altro_blocco.dati = altro_blocco.dati[:256]
                 blocco += altro_blocco
                 # contiene_eof = altro_blocco.dati.find(b"\x1a") >= 0
 

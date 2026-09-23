@@ -1,0 +1,39 @@
+[project]
+name = "msxtools"
+version = "0.9.9"
+description = "Tools that allows to read virtual tape files for the old MSX format (.cas)"
+authors = [{ name = "Francesco Maida", email = "francesco.maida@gmail.com" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.13"
+keywords = ["msx", "cas", "tape", "audio"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Utilities",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = ["typer (>=0.27.2,<0.28.0)"]
+
+[project.scripts]
+msxtools = "msxtools.cli:main"
+
+[project.urls]
+Source = "https://github.com/fmaida/msxtools"
+"Bug Reports" = "https://github.com/fmaida/msxtools/issues"
+
+[tool.poetry]
+packages = [{ include = "msxtools", from = "src" }]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test*.py"]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -15,11 +15,16 @@ class BasicFile(GenericDataBlock):
 
     # --=-=--------------------------------------------------------------------------=-=--
 
+    def parti_cas(self) -> list[bytes]:
+        return [self.intestazione + self.titolo_in_bytes() + self.coda_intestazione, self.dati]
+
+    # --=-=--------------------------------------------------------------------------=-=--
+
     def esporta(self, p_file: Esportazione):
 
         p_file.inserisci_sincronismo(2500)  # Tre secondi
 
-        intestazione = self.intestazione + self.title.encode("ascii")
+        intestazione = self.intestazione + self.titolo_in_bytes() + self.coda_intestazione
 
         p_file.inserisci_stringa(intestazione)
 
