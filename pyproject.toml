@@ -28,7 +28,7 @@ Source = "https://github.com/fmaida/msxtools"
 packages = [{ include = "msxtools", from = "src" }]
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.0"
+pytest = "^9.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
